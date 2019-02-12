@@ -1,26 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:id="@+id/submission_scrollable_container">
-
-    <ImageView
-        android:id="@+id/close_btn"
-        android:layout_width="wrap_content"
+    
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_close_black_24dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"/>
+        android:background="@color/colorAccent"
+        android:elevation="20dp"
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="80dp"
-        android:paddingStart="80dp"
-        android:text="This is some content"/>
+        <ImageView
+            android:id="@+id/close_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_close_black_24dp"
+            android:clickable="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            tools:ignore="KeyboardInaccessibleWidget" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="80dp"
+            android:paddingStart="80dp"
+            android:text="This is some content"/>
+
+    </FrameLayout>
 
 </ScrollView>
