@@ -1,4 +1,4 @@
-package com.cniekirk.kreddit.ui
+package com.cniekirk.kreddit.ui.subreddit
 
 interface SubmissionItemClickListener {
 

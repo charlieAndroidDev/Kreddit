@@ -1,4 +1,4 @@
-package com.cniekirk.kreddit.ui
+package com.cniekirk.kreddit.ui.subreddit
 
 import android.os.Bundle
 import android.util.Log
@@ -17,7 +17,6 @@ import me.saket.inboxrecyclerview.page.InterceptResult
 class FragmentSubmission: Fragment() {
 
     private val submissionPage by lazy { view!!.parent as ExpandablePageLayout }
-    //private val scrollableContainer by lazy { view!!.findViewById<ScrollView>(R.id.submission_scrollable_container) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_submission, container, false)
@@ -27,7 +26,6 @@ class FragmentSubmission: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         close_btn.setOnClickListener {
-            Log.d("CLOSE", "CLICKED!")
             requireActivity().onBackPressed()
         }
 

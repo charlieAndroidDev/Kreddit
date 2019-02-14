@@ -1,20 +1,14 @@
-package com.cniekirk.kreddit
+package com.cniekirk.kreddit.ui.subreddit
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.cniekirk.kreddit.R
 import com.cniekirk.kreddit.data.SubmissionRepository
-import com.cniekirk.kreddit.ui.FragmentSubmission
-import com.cniekirk.kreddit.ui.SubmissionItemClickListener
-import com.cniekirk.kreddit.ui.SubmissionsAdapter
 import kotlinx.android.synthetic.main.activity_main.*
-import me.saket.inboxrecyclerview.InboxRecyclerView
-import me.saket.inboxrecyclerview.page.ExpandablePageLayout
 
-class MainActivity : AppCompatActivity(), SubmissionItemClickListener {
-
-    //private val submissionsList = findViewById<InboxRecyclerView>(R.id.submissions_list)
-    //private val submissionPageLayout = findViewById<ExpandablePageLayout>(R.id.submission_page)
+class SubredditActivity : AppCompatActivity(), SubmissionItemClickListener {
 
     private val submissionsAdapter = SubmissionsAdapter(this)
 
@@ -42,8 +36,10 @@ class MainActivity : AppCompatActivity(), SubmissionItemClickListener {
 
     private fun setupSubmissionList() {
 
-        submissions_list.layoutManager = LinearLayoutManager(this)
+        val layoutManager = LinearLayoutManager(this)
+        submissions_list.layoutManager = layoutManager
         submissions_list.setExpandablePage(submission_page)
+        submissions_list.addItemDecoration(DividerItemDecoration(this, layoutManager.orientation))
 
         submissionsAdapter.submitList(SubmissionRepository.submissions())
         submissions_list.adapter = submissionsAdapter
@@ -63,9 +59,5 @@ class MainActivity : AppCompatActivity(), SubmissionItemClickListener {
         }
 
     }
-
-
-
-
 
 }

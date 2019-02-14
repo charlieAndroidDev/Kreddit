@@ -1,4 +1,4 @@
-package com.cniekirk.kreddit.ui
+package com.cniekirk.kreddit.ui.subreddit
 
 import android.view.LayoutInflater
 import android.view.View
@@ -27,6 +27,8 @@ class SubmissionsAdapter(private val clickListener: SubmissionItemClickListener)
     override fun onBindViewHolder(holder: SubmissionViewHolder, position: Int) {
         holder.submissionIndex = position
         holder.submissionTitle.text = getItem(position).title
+        holder.submissionAuthor.text = getItem(position).author
+        holder.submissionSubreddit.text = getItem(position).subReddit
     }
 
     override fun getItemId(position: Int): Long {
@@ -40,7 +42,12 @@ open class SubmissionViewHolder(
     listener: SubmissionItemClickListener
 ): RecyclerView.ViewHolder(itemView) {
 
-    val submissionTitle = itemView.findViewById<TextView>(R.id.submission_title)
+    /*
+        Lazy evaluated views to avoid null reference exceptions
+     */
+    val submissionTitle: TextView by lazy { itemView.findViewById<TextView>(R.id.submission_title) }
+    val submissionAuthor: TextView by lazy { itemView.findViewById<TextView>(R.id.submission_author) }
+    val submissionSubreddit: TextView by lazy { itemView.findViewById<TextView>(R.id.submission_subreddit) }
 
     var submissionIndex: Int by Delegates.notNull()
 
