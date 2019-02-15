@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cniekirk.kreddit.R
+import com.cniekirk.kreddit.core.extensions.inTransaction
 import com.cniekirk.kreddit.data.SubmissionRepository
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -27,10 +28,9 @@ class SubredditActivity : AppCompatActivity(), SubmissionItemClickListener {
             submissionFragment = FragmentSubmission()
         }
 
-        supportFragmentManager
-            .beginTransaction()
-            .replace(submission_page.id, submissionFragment)
-            .commitNowAllowingStateLoss()
+        supportFragmentManager.inTransaction {
+            replace(submission_page.id, submissionFragment)
+        }
 
     }
 
