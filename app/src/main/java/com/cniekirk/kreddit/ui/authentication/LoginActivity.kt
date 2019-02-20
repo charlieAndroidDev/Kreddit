@@ -9,7 +9,10 @@ import android.webkit.CookieManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.cniekirk.kreddit.core.extensions.contains
+import com.cniekirk.kreddit.data.reddit.UserLoginHandler
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class LoginActivity: AppCompatActivity() {
 
@@ -42,11 +45,16 @@ class LoginActivity: AppCompatActivity() {
 
         }
 
+        //login_webview.loadUrl()
+
     }
 
     private fun handlePermissionGranted(url: String) {
 
-
+//        GlobalScope.launch {
+//            val ulh = UserLoginHandler(url.)
+//
+//        }
 
     }
 

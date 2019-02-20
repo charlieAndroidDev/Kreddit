@@ -1,6 +1,6 @@
 package com.cniekirk.kreddit.core.extensions
 
-// Just nicer and more readable
-infix fun String.contains(other: String): Boolean {
-    return this.contains(other)
+// Just playing with infix notation, pretty nice
+infix fun String.contains(otherString: String): Boolean {
+    return this.contains(otherString)
 }

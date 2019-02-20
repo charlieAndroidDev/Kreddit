@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.cniekirk.kreddit.widgets.gesture.GestureActionLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="14dp"
+    android:paddingBottom="14dp"
+    android:clipToPadding="false"
+    android:clipChildren="false"
+    app:item_expand_ratio="1.3">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <TextView
+            android:id="@+id/submission_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread"/>
+
+        <TextView
+            android:id="@+id/submission_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/submission_title"
+            android:layout_marginTop="2dp"
+            android:textAllCaps="true"/>
+
+        <TextView
+            android:id="@+id/submission_subreddit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toEndOf="@id/submission_author"
+            app:layout_constraintTop_toBottomOf="@id/submission_title"
+            android:layout_marginTop="2dp"
+            android:textAllCaps="true"
+            android:textStyle="bold"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.cniekirk.kreddit.widgets.gesture.GestureActionLayout>

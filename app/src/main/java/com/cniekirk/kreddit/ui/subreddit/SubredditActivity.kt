@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class SubredditActivity : AppCompatActivity(), SubmissionItemClickListener {
 
-    private val submissionsAdapter = SubmissionsAdapter(this)
+    private var submissionsAdapter = SubmissionsAdapter(this, emptyList())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +41,7 @@ class SubredditActivity : AppCompatActivity(), SubmissionItemClickListener {
         submissions_list.setExpandablePage(submission_page)
         submissions_list.addItemDecoration(DividerItemDecoration(this, layoutManager.orientation))
 
-        submissionsAdapter.submitList(SubmissionRepository.submissions())
+        submissionsAdapter = SubmissionsAdapter(this, SubmissionRepository.submissions())
         submissions_list.adapter = submissionsAdapter
 
     }

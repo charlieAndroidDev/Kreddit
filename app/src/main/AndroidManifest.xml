@@ -18,6 +18,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".ui.authentication.LoginActivity" />
 
         <meta-data
             android:name="net.dean.jraw.android.CLIENT_ID"
