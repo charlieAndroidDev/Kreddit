@@ -9,6 +9,11 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 class AnimationManager(val onAnimationUpdated: () -> Unit) {
 
 
+    interface AnimationListener {
+
+        fun onAnimationUpdated()
+
+    }
 
 
 }

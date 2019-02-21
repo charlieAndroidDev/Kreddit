@@ -17,8 +17,10 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.cniekirk.kreddit.R
 import com.cniekirk.kreddit.ui.subreddit.uimodel.GestureSubmissionData
+import com.cniekirk.kreddit.widgets.gesture.draw.data.GestureActionData
 
-class GestureActionLayout(context: Context, attributeSet: AttributeSet): FrameLayout(context, attributeSet) {
+class GestureActionLayout(context: Context, attributeSet: AttributeSet):
+    FrameLayout(context, attributeSet), GestureActionManager.AnimationListener {
 
     private val initialMeasuredHeight: Int by lazy { measuredHeight }
     private val paint = Paint()
@@ -29,6 +31,10 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet): FrameLa
     private var foregroundDrawable: ForegroundDrawable
 
     private lateinit var gestureSubmissionData: GestureSubmissionData
+
+    private var gestureActionManager: GestureActionManager
+
+    private var gestureActionData: GestureActionData
 
     private var foregroundDrawableHeightRatio = 1.0f
 
@@ -59,20 +65,32 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet): FrameLa
         foregroundDrawable.bounds = Rect(left, top, right, bottom)
         foregroundDrawable.callback = this
 
+        gestureActionData = GestureActionData(variableTextAlpha = 0,
+            variableBackgroundAlpha = 0, variableTextRevealHeight = 0,
+            initialMeasuredHeight = initialMeasuredHeight,
+            layoutWidth = width, layoutHeight = height, gestureSubmissionData = null)
+
+        // Create GestureActionManager with values
+        gestureActionManager = GestureActionManager(context, this, foregroundDrawable, gestureActionData)
+
     }
 
     fun setSubmissionData(gestureSubmissionData: GestureSubmissionData) {
         this.gestureSubmissionData = gestureSubmissionData
+        // Refactored
+        gestureActionData.gestureSubmissionData = gestureSubmissionData
     }
 
     override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)
 
+        // Delegate drawing to controller
+        gestureActionManager.drawManager.draw(canvas)
+
         if (shouldForegroundBeDrawn) {
 
             foregroundDrawable.draw(canvas)
 
-            //canvas.save()
             val clipBounds = canvas.clipBounds
             clipBounds.inset(0, -initialMeasuredHeight)
             canvas.clipRect(clipBounds)
@@ -89,9 +107,11 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet): FrameLa
             paint.textAlign = Paint.Align.CENTER
             paint.typeface = Typeface.DEFAULT_BOLD
 
+            // ((paint.ascent() - paint.descent()) / 2) is the distance from center to baseline of drawn text
+            val textY = -textRevealHeight.toFloat() - ((paint.ascent() - paint.descent()) / 2)
+
             canvas.drawText("\"${gestureSubmissionData.submissionText}\"",
-                canvas.width / 2f, -textRevealHeight.toFloat(), paint)
-            //canvas.restore()
+                canvas.width / 2f, textY, paint)
 
         }
     }
@@ -190,7 +210,7 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet): FrameLa
             textBackgroundAlpha = it.animatedValue as Int
         }
 
-        val textHeightAnimator = ValueAnimator.ofInt(0, 100)
+        val textHeightAnimator = ValueAnimator.ofInt(0, initialMeasuredHeight / 2)
         textHeightAnimator.addUpdateListener {
             textRevealHeight = it.animatedValue as Int
         }
@@ -264,7 +284,7 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet): FrameLa
             textBackgroundAlpha = it.animatedValue as Int
         }
 
-        val textHeightAnimator = ValueAnimator.ofInt(100, 0)
+        val textHeightAnimator = ValueAnimator.ofInt(initialMeasuredHeight / 2, 0)
         textHeightAnimator.addUpdateListener {
             textRevealHeight = it.animatedValue as Int
         }
@@ -290,6 +310,10 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet): FrameLa
 
         animatorSet.start()
 
+    }
+
+    override fun onAnimationUpdated() {
+        invalidate()
     }
 
     override fun invalidateDrawable(drawable: Drawable) {
