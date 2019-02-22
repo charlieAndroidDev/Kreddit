@@ -1,16 +1,16 @@
 package com.cniekirk.kreddit.widgets.gesture.draw
 
 import android.animation.ValueAnimator
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Typeface
+import android.graphics.*
+import android.graphics.drawable.Drawable
 import android.util.Log
+import com.cniekirk.kreddit.widgets.gesture.GestureAction
 import com.cniekirk.kreddit.widgets.gesture.GestureActionLayout
 import com.cniekirk.kreddit.widgets.gesture.draw.data.GestureActionData
 
 class DrawController(private val gestureActionData: GestureActionData,
-                     private val foregroundDrawable: GestureActionLayout.ForegroundDrawable) {
+                     private val foregroundDrawable: GestureActionLayout.ForegroundDrawable,
+                     private val gestureActionIcons: List<GestureAction>) {
 
     private val textPaint = Paint()
     private val backgroundRectPaint = Paint()
@@ -18,14 +18,13 @@ class DrawController(private val gestureActionData: GestureActionData,
     var textRevealAlpha = 0
     var textBackgroundAlpha = 0
     var textRevealHeight = 0f
+    var actionIconHeight = gestureActionData.layoutHeight
 
     /**
      * Only called when foregroundDrawable should be drawn
      * @param canvas: The canvas to draw to passed in from the layout itself
      */
     fun draw(canvas: Canvas) {
-
-        Log.d("THIS", "This: $this")
 
         foregroundDrawable.draw(canvas)
 
@@ -46,24 +45,35 @@ class DrawController(private val gestureActionData: GestureActionData,
         textPaint.typeface = Typeface.DEFAULT_BOLD
         textPaint.alpha = textRevealAlpha
 
-        Log.d("TEXT H", "TEXT H = $textRevealHeight")
-
         // ((textPaint.ascent() - textPaint.descent()) / 2) is the distance from the centre to the baseline of drawn text
         val textY = -textRevealHeight - ((textPaint.ascent() - textPaint.descent()) / 2)
 
         canvas.drawText("\"${gestureActionData.gestureSubmissionData?.submissionText}\"",
             canvas.width / 2f, textY, textPaint)
 
+        gestureActionIcons.forEachIndexed { index, gestureAction ->
+
+            val offset = index * (gestureActionData.layoutWidth / gestureActionIcons.size)
+            val eigth = (gestureActionData.layoutWidth / (gestureActionIcons.size * 2))
+
+            gestureAction.drawable.alpha = textRevealAlpha
+            gestureAction.drawable.setBounds((offset + eigth) - (gestureAction.drawable.intrinsicWidth / 2), (actionIconHeight / 2) - (gestureAction.drawable.intrinsicHeight / 2),
+                ((offset + eigth) - (gestureAction.drawable.intrinsicWidth / 2) + gestureAction.drawable.intrinsicWidth),
+                (actionIconHeight / 2) + (gestureAction.drawable.intrinsicHeight / 2))
+
+            gestureAction.drawable.draw(canvas)
+
+        }
+
     }
 
     fun updateDrawValues(valueAnimator: ValueAnimator) {
-
-        Log.d("THIS_2", "This: $this")
 
         textRevealAlpha = valueAnimator.getAnimatedValue("TEXT_REVEAL_ALPHA") as Int
         textBackgroundAlpha = valueAnimator.getAnimatedValue("TEXT_BACKGROUND_ALPHA") as Int
         textRevealHeight = (valueAnimator.getAnimatedValue("TEXT_HEIGHT") as Int).toFloat()
         foregroundDrawable.alpha = valueAnimator.getAnimatedValue("FOREGROUND_DRAWABLE_ALPHA") as Int
+        actionIconHeight = (valueAnimator.getAnimatedValue("VIEW_HEIGHT") as Float).toInt()
 
     }
 

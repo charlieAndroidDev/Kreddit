@@ -2,6 +2,7 @@ package com.cniekirk.kreddit.widgets.gesture.animation
 
 import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
+import androidx.core.animation.doOnEnd
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.cniekirk.kreddit.widgets.gesture.draw.data.GestureActionData
 
@@ -63,6 +64,9 @@ class AnimationManager(private val gestureActionData: GestureActionData,
         revealAnimator.interpolator = FastOutSlowInInterpolator()
         revealAnimator.addUpdateListener {
             animationListener.onHideAnimationUpdated(it)
+        }
+        revealAnimator.doOnEnd {
+            animationListener.onHideAnimationCompleted()
         }
         revealAnimator.start()
 

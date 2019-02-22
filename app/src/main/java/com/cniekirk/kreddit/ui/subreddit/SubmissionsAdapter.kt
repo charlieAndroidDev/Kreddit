@@ -1,15 +1,18 @@
 package com.cniekirk.kreddit.ui.subreddit
 
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.cniekirk.kreddit.R
 import com.cniekirk.kreddit.data.Submission
 import com.cniekirk.kreddit.ui.subreddit.uimodel.GestureSubmissionData
+import com.cniekirk.kreddit.widgets.gesture.GestureAction
 import com.cniekirk.kreddit.widgets.gesture.GestureActionLayout
 import kotlin.properties.Delegates
 
@@ -69,10 +72,20 @@ class SubmissionsAdapter(private val clickListener: SubmissionItemClickListener,
 
                 if (isLongPressed) {
 
-                    if (motionEvent.action == MotionEvent.ACTION_UP || motionEvent.action == MotionEvent.ACTION_CANCEL) {
+                    // Don't let RecyclerView steal our touch event while long pressing
+                    gestureLayout.parent.requestDisallowInterceptTouchEvent(true)
+
+                    if (motionEvent.action == MotionEvent.ACTION_UP) {
 
                         gestureLayout.hideActions()
                         isLongPressed = false
+                        // Make sure we pass back control while not long pressing
+                        gestureLayout.parent.requestDisallowInterceptTouchEvent(false)
+
+                    } else if (motionEvent.action == MotionEvent.ACTION_MOVE) {
+
+                        gestureLayout.setAction(motionEvent.x)
+                        view.onTouchEvent(motionEvent)
 
                     } else {
 
@@ -88,6 +101,17 @@ class SubmissionsAdapter(private val clickListener: SubmissionItemClickListener,
 
                 true
             }
+
+            val upvote = gestureLayout.resources.getDrawable(R.drawable.ic_upvote, null)
+            val downvote = gestureLayout.resources.getDrawable(R.drawable.ic_downvote, null)
+            val favourite = gestureLayout.resources.getDrawable(R.drawable.ic_favourite, null)
+            val reply = gestureLayout.resources.getDrawable(R.drawable.ic_reply, null)
+
+            gestureLayout.setActionIcons(listOf(GestureAction(upvote, ContextCompat.getColor(gestureLayout.context, R.color.colorTeal)),
+                GestureAction(downvote, ContextCompat.getColor(gestureLayout.context, R.color.colorRed)),
+                GestureAction(favourite, ContextCompat.getColor(gestureLayout.context, R.color.colorGold)),
+                GestureAction(reply, ContextCompat.getColor(gestureLayout.context, R.color.colorBlue))))
+
         }
 
 

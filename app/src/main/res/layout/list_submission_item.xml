@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.cniekirk.kreddit.widgets.gesture.GestureActionLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,7 +9,8 @@
     android:paddingBottom="14dp"
     android:clipToPadding="false"
     android:clipChildren="false"
-    app:item_expand_ratio="1.3">
+    app:item_expand_ratio="1.3"
+    android:orientation="horizontal">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
