@@ -67,8 +67,6 @@ class SubmissionsAdapter(private val clickListener: SubmissionItemClickListener,
             }
             gestureLayout.setOnTouchListener { view, motionEvent ->
 
-                Log.d("GESTURE", "Gesture instance: $gestureLayout")
-
                 if (isLongPressed) {
 
                     if (motionEvent.action == MotionEvent.ACTION_UP || motionEvent.action == MotionEvent.ACTION_CANCEL) {

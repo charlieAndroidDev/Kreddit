@@ -20,7 +20,7 @@ import com.cniekirk.kreddit.ui.subreddit.uimodel.GestureSubmissionData
 import com.cniekirk.kreddit.widgets.gesture.draw.data.GestureActionData
 
 class GestureActionLayout(context: Context, attributeSet: AttributeSet):
-    FrameLayout(context, attributeSet), GestureActionManager.AnimationListener {
+    FrameLayout(context, attributeSet) {
 
     private val initialMeasuredHeight: Int by lazy { measuredHeight }
     private val paint = Paint()
@@ -32,9 +32,9 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet):
 
     private lateinit var gestureSubmissionData: GestureSubmissionData
 
-    private var gestureActionManager: GestureActionManager
+    private lateinit var gestureActionManager: GestureActionManager
 
-    private var gestureActionData: GestureActionData
+    private lateinit var gestureActionData: GestureActionData
 
     private var foregroundDrawableHeightRatio = 1.0f
 
@@ -65,55 +65,93 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet):
         foregroundDrawable.bounds = Rect(left, top, right, bottom)
         foregroundDrawable.callback = this
 
-        gestureActionData = GestureActionData(variableTextAlpha = 0,
-            variableBackgroundAlpha = 0, variableTextRevealHeight = 0,
-            initialMeasuredHeight = initialMeasuredHeight,
-            layoutWidth = width, layoutHeight = height, gestureSubmissionData = null)
 
-        // Create GestureActionManager with values
-        gestureActionManager = GestureActionManager(context, this, foregroundDrawable, gestureActionData)
+        // HAVE TO CHANGE THIS, INIT SOMEWHERE ELSE SO IT DOESN'T KEEP GETTING DONE!
+        viewTreeObserver.addOnGlobalLayoutListener {
+
+            gestureActionData = GestureActionData(variableTextAlpha = 0,
+                variableBackgroundAlpha = 0, variableTextRevealHeight = 0,
+                initialMeasuredHeight = initialMeasuredHeight,
+                layoutWidth = width, layoutHeight = height, gestureSubmissionData = null,
+                foregroundDrawableHeightRatio = foregroundDrawableHeightRatio)
+            gestureActionData.gestureSubmissionData = gestureSubmissionData
+
+            val viewBounds = Rect()
+
+            // Create GestureActionManager with values
+            gestureActionManager = GestureActionManager(foregroundDrawable, gestureActionData, onShowAnimationUpdate = {
+
+                // On show animation updated
+                val update = it.getAnimatedValue("VIEW_HEIGHT") as Float
+                val layoutParams = this.layoutParams
+                layoutParams.height = update.toInt()
+                this.layoutParams = layoutParams
+                getLocalVisibleRect(viewBounds)
+                foregroundDrawable.bounds = viewBounds
+                // Maybe need to call invalidate()
+
+            }, onHideAnimationUpdate = {
+
+                // On hide animation updated
+                val update = it.getAnimatedValue("VIEW_HEIGHT") as Float
+                val layoutParams = this.layoutParams
+                layoutParams.height = update.toInt()
+                this.layoutParams = layoutParams
+                getLocalVisibleRect(viewBounds)
+                foregroundDrawable.bounds = viewBounds
+
+            }, onHideAnimationComplete = {
+
+                shouldForegroundBeDrawn = false
+                invalidate()
+
+            })
+
+        }
 
     }
 
     fun setSubmissionData(gestureSubmissionData: GestureSubmissionData) {
         this.gestureSubmissionData = gestureSubmissionData
-        // Refactored
-        gestureActionData.gestureSubmissionData = gestureSubmissionData
     }
 
     override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)
 
-        // Delegate drawing to controller
-        gestureActionManager.drawManager.draw(canvas)
-
         if (shouldForegroundBeDrawn) {
 
-            foregroundDrawable.draw(canvas)
-
-            val clipBounds = canvas.clipBounds
-            clipBounds.inset(0, -initialMeasuredHeight)
-            canvas.clipRect(clipBounds)
-
-            paint.color = Color.WHITE
-            paint.alpha = textBackgroundAlpha
-            paint.flags = Paint.ANTI_ALIAS_FLAG
-
-            canvas.drawRect(0f, -initialMeasuredHeight.toFloat(), width.toFloat(), 0f, paint)
-
-            paint.color = Color.BLACK
-            paint.alpha = revealAlpha
-            paint.textSize = 55f
-            paint.textAlign = Paint.Align.CENTER
-            paint.typeface = Typeface.DEFAULT_BOLD
-
-            // ((paint.ascent() - paint.descent()) / 2) is the distance from center to baseline of drawn text
-            val textY = -textRevealHeight.toFloat() - ((paint.ascent() - paint.descent()) / 2)
-
-            canvas.drawText("\"${gestureSubmissionData.submissionText}\"",
-                canvas.width / 2f, textY, paint)
+            // Delegate drawing to controller
+            gestureActionManager.drawManager.draw(canvas)
 
         }
+
+//        if (shouldForegroundBeDrawn) {
+//
+//            foregroundDrawable.draw(canvas)
+//
+//            val clipBounds = canvas.clipBounds
+//            clipBounds.inset(0, -initialMeasuredHeight)
+//            canvas.clipRect(clipBounds)
+//
+//            paint.color = Color.WHITE
+//            paint.alpha = textBackgroundAlpha
+//            paint.flags = Paint.ANTI_ALIAS_FLAG
+//
+//            canvas.drawRect(0f, -initialMeasuredHeight.toFloat(), width.toFloat(), 0f, paint)
+//
+//            paint.color = Color.BLACK
+//            paint.alpha = revealAlpha
+//            paint.textSize = 55f
+//            paint.textAlign = Paint.Align.CENTER
+//            paint.typeface = Typeface.DEFAULT_BOLD
+//
+//            // ((paint.ascent() - paint.descent()) / 2) is the distance from center to baseline of drawn text
+//            val textY = -textRevealHeight.toFloat() - ((paint.ascent() - paint.descent()) / 2)
+//
+//            canvas.drawText("\"${gestureSubmissionData.submissionText}\"",
+//                canvas.width / 2f, textY, paint)
+//
+//        }
     }
 
     /**
@@ -186,51 +224,55 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet):
     fun displayActions() {
 
         shouldForegroundBeDrawn = true
-        val viewBounds = Rect()
 
-        val viewHeightAnimator = ValueAnimator.ofFloat(initialMeasuredHeight.toFloat(), (initialMeasuredHeight * foregroundDrawableHeightRatio))
-        viewHeightAnimator.addUpdateListener {
+        gestureActionManager.animateShow()
 
-            val update = it.animatedValue as Float
-            val layoutParams = this.layoutParams
-            layoutParams.height = update.toInt()
-            this.layoutParams = layoutParams
-            getLocalVisibleRect(viewBounds)
-            foregroundDrawable.bounds = viewBounds
-
-        }
-
-        val revealAlphaAnimator = ValueAnimator.ofInt(0, 255)
-        revealAlphaAnimator.addUpdateListener {
-            revealAlpha = it.animatedValue as Int
-        }
-
-        val textBackgroundAlphaAnimator = ValueAnimator.ofInt(0, 235)
-        textBackgroundAlphaAnimator.addUpdateListener {
-            textBackgroundAlpha = it.animatedValue as Int
-        }
-
-        val textHeightAnimator = ValueAnimator.ofInt(0, initialMeasuredHeight / 2)
-        textHeightAnimator.addUpdateListener {
-            textRevealHeight = it.animatedValue as Int
-        }
-
-        val actionsAlphaAnimator = ObjectAnimator.ofInt(
-            foregroundDrawable,
-            "alpha",
-            0,
-            255
-        )
-
-        val animatorSet = AnimatorSet()
-        animatorSet.duration = 300
-        animatorSet.interpolator = FastOutSlowInInterpolator()
-        animatorSet.playTogether(viewHeightAnimator, actionsAlphaAnimator,
-            revealAlphaAnimator, textBackgroundAlphaAnimator, textHeightAnimator)
-        animatorSet.start()
+//        val viewBounds = Rect()
+//
+//        val viewHeightAnimator = ValueAnimator.ofFloat(initialMeasuredHeight.toFloat(), (initialMeasuredHeight * foregroundDrawableHeightRatio))
+//        viewHeightAnimator.addUpdateListener {
+//
+//            val update = it.animatedValue as Float
+//            val layoutParams = this.layoutParams
+//            layoutParams.height = update.toInt()
+//            this.layoutParams = layoutParams
+//            getLocalVisibleRect(viewBounds)
+//            foregroundDrawable.bounds = viewBounds
+//
+//        }
+//
+//        val revealAlphaAnimator = ValueAnimator.ofInt(0, 255)
+//        revealAlphaAnimator.addUpdateListener {
+//            revealAlpha = it.animatedValue as Int
+//        }
+//
+//        val textBackgroundAlphaAnimator = ValueAnimator.ofInt(0, 235)
+//        textBackgroundAlphaAnimator.addUpdateListener {
+//            textBackgroundAlpha = it.animatedValue as Int
+//        }
+//
+//        val textHeightAnimator = ValueAnimator.ofInt(0, initialMeasuredHeight / 2)
+//        textHeightAnimator.addUpdateListener {
+//            textRevealHeight = it.animatedValue as Int
+//        }
+//
+//        val actionsAlphaAnimator = ObjectAnimator.ofInt(
+//            foregroundDrawable,
+//            "alpha",
+//            0,
+//            255
+//        )
+//
+//        val animatorSet = AnimatorSet()
+//        animatorSet.duration = 300
+//        animatorSet.interpolator = FastOutSlowInInterpolator()
+//        animatorSet.playTogether(viewHeightAnimator, actionsAlphaAnimator,
+//            revealAlphaAnimator, textBackgroundAlphaAnimator, textHeightAnimator)
+//        animatorSet.start()
 
     }
 
+    // Work in progress
     fun setSwipeTranslation(translationY: Float) {
 
         if (!shouldForegroundBeDrawn)
@@ -260,60 +302,58 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet):
 
     fun hideActions() {
 
-        val viewBounds = Rect()
+        gestureActionManager.animateHide()
 
-        val viewHeightAnimator = ValueAnimator.ofFloat(measuredHeight.toFloat(), initialMeasuredHeight.toFloat())
-        viewHeightAnimator.addUpdateListener {
+//        val viewBounds = Rect()
+//
+//        val viewHeightAnimator = ValueAnimator.ofFloat(measuredHeight.toFloat(), initialMeasuredHeight.toFloat())
+//        viewHeightAnimator.addUpdateListener {
+//
+//            val update = it.animatedValue as Float
+//            val layoutParams = this.layoutParams
+//            layoutParams.height = update.toInt()
+//            this.layoutParams = layoutParams
+//            getLocalVisibleRect(viewBounds)
+//            foregroundDrawable.bounds = viewBounds
+//
+//        }
+//
+//        val revealAlphaAnimator = ValueAnimator.ofInt( 255, 0)
+//        revealAlphaAnimator.addUpdateListener {
+//            revealAlpha = it.animatedValue as Int
+//        }
+//
+//        val textBackgroundAlphaAnimator = ValueAnimator.ofInt(235, 0)
+//        textBackgroundAlphaAnimator.addUpdateListener {
+//            textBackgroundAlpha = it.animatedValue as Int
+//        }
+//
+//        val textHeightAnimator = ValueAnimator.ofInt(initialMeasuredHeight / 2, 0)
+//        textHeightAnimator.addUpdateListener {
+//            textRevealHeight = it.animatedValue as Int
+//        }
+//
+//        val actionsAlphaAnimator = ObjectAnimator.ofInt(
+//            foregroundDrawable,
+//            "alpha",
+//            255,
+//            0
+//        )
+//
+//        val animatorSet = AnimatorSet()
+//        animatorSet.duration = 300
+//        animatorSet.interpolator = FastOutSlowInInterpolator()
+//        animatorSet.playTogether(viewHeightAnimator, actionsAlphaAnimator,
+//            revealAlphaAnimator, textBackgroundAlphaAnimator, textHeightAnimator)
+//
+//        animatorSet.doOnEnd {
+//            // Completely remove foreground
+//            shouldForegroundBeDrawn = false
+//            invalidate()
+//        }
+//
+//        animatorSet.start()
 
-            val update = it.animatedValue as Float
-            val layoutParams = this.layoutParams
-            layoutParams.height = update.toInt()
-            this.layoutParams = layoutParams
-            getLocalVisibleRect(viewBounds)
-            foregroundDrawable.bounds = viewBounds
-
-        }
-
-        val revealAlphaAnimator = ValueAnimator.ofInt( 255, 0)
-        revealAlphaAnimator.addUpdateListener {
-            revealAlpha = it.animatedValue as Int
-        }
-
-        val textBackgroundAlphaAnimator = ValueAnimator.ofInt(235, 0)
-        textBackgroundAlphaAnimator.addUpdateListener {
-            textBackgroundAlpha = it.animatedValue as Int
-        }
-
-        val textHeightAnimator = ValueAnimator.ofInt(initialMeasuredHeight / 2, 0)
-        textHeightAnimator.addUpdateListener {
-            textRevealHeight = it.animatedValue as Int
-        }
-
-        val actionsAlphaAnimator = ObjectAnimator.ofInt(
-            foregroundDrawable,
-            "alpha",
-            255,
-            0
-        )
-
-        val animatorSet = AnimatorSet()
-        animatorSet.duration = 300
-        animatorSet.interpolator = FastOutSlowInInterpolator()
-        animatorSet.playTogether(viewHeightAnimator, actionsAlphaAnimator,
-            revealAlphaAnimator, textBackgroundAlphaAnimator, textHeightAnimator)
-
-        animatorSet.doOnEnd {
-            // Completely remove foreground
-            shouldForegroundBeDrawn = false
-            invalidate()
-        }
-
-        animatorSet.start()
-
-    }
-
-    override fun onAnimationUpdated() {
-        invalidate()
     }
 
     override fun invalidateDrawable(drawable: Drawable) {

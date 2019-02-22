@@ -10,6 +10,7 @@ data class GestureActionData(
     var variableBackgroundAlpha: Int,
     var variableTextRevealHeight: Int,
     val initialMeasuredHeight: Int,
+    val foregroundDrawableHeightRatio: Float,
     val layoutWidth: Int,
     val layoutHeight: Int,
     var gestureSubmissionData: GestureSubmissionData?
