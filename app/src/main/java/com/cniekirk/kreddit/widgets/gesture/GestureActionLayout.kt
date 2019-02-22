@@ -1,6 +1,5 @@
 package com.cniekirk.kreddit.widgets.gesture
 
-import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
@@ -45,14 +44,7 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet):
         foregroundDrawableHeightRatio = typedArray.getFloat(R.styleable.GestureActionLayout_item_expand_ratio, 1.0f)
         typedArray.recycle()
 
-        val positiveColour = ResourcesCompat.getColor(resources, R.color.colorTeal, null)
-        val negativeColour = ResourcesCompat.getColor(resources, R.color.colorRed, null)
-
-        foregroundDrawable = ForegroundDrawable(
-            ColorDrawable(Color.DKGRAY),
-            positiveColour,
-            negativeColour
-        )
+        foregroundDrawable = ForegroundDrawable(ColorDrawable(Color.DKGRAY))
         foregroundDrawable.alpha = 0
         foregroundDrawable.bounds = Rect(left, top, right, bottom)
         foregroundDrawable.callback = this
@@ -134,9 +126,7 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet):
      * Represents the drawable drawn on top of the content in the layout that
      * provides gesture driven actions
      */
-    class ForegroundDrawable(foregroundColourDrawable: ColorDrawable,
-                             private val positiveColour: Int,
-                             private val negativeColour: Int):
+    class ForegroundDrawable(foregroundColourDrawable: ColorDrawable):
         LayerDrawable(arrayOf(foregroundColourDrawable)) {
 
         private var changeColourAnimator =  ValueAnimator()

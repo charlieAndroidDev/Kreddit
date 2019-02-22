@@ -1,7 +1,5 @@
 package com.cniekirk.kreddit.ui.subreddit
 
-import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -107,7 +105,7 @@ class SubmissionsAdapter(private val clickListener: SubmissionItemClickListener,
             val favourite = gestureLayout.resources.getDrawable(R.drawable.ic_favourite, null)
             val reply = gestureLayout.resources.getDrawable(R.drawable.ic_reply, null)
 
-            gestureLayout.setActionIcons(listOf(GestureAction(upvote, ContextCompat.getColor(gestureLayout.context, R.color.colorTeal)),
+            gestureLayout.setActionIcons(listOf(GestureAction(upvote, ContextCompat.getColor(gestureLayout.context, R.color.colorGreen)),
                 GestureAction(downvote, ContextCompat.getColor(gestureLayout.context, R.color.colorRed)),
                 GestureAction(favourite, ContextCompat.getColor(gestureLayout.context, R.color.colorGold)),
                 GestureAction(reply, ContextCompat.getColor(gestureLayout.context, R.color.colorBlue))))
