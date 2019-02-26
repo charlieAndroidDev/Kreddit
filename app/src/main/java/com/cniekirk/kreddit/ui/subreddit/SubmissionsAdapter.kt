@@ -28,7 +28,7 @@ class SubmissionsAdapter(private val clickListener: SubmissionItemClickListener,
         return SubmissionViewHolder(submissionLayout, clickListener)
 
     }
-
+    
     override fun onBindViewHolder(holder: SubmissionViewHolder, position: Int) {
         holder.submissionIndex = position
         holder.submissionTitle.text = submissions[position].title
@@ -105,7 +105,7 @@ class SubmissionsAdapter(private val clickListener: SubmissionItemClickListener,
             val favourite = gestureLayout.resources.getDrawable(R.drawable.ic_favourite, null)
             val reply = gestureLayout.resources.getDrawable(R.drawable.ic_reply, null)
 
-            gestureLayout.setActionIcons(listOf(GestureAction(upvote, ContextCompat.getColor(gestureLayout.context, R.color.colorGreen)),
+            gestureLayout.setGestureActions(listOf(GestureAction(upvote, ContextCompat.getColor(gestureLayout.context, R.color.colorGreen)),
                 GestureAction(downvote, ContextCompat.getColor(gestureLayout.context, R.color.colorRed)),
                 GestureAction(favourite, ContextCompat.getColor(gestureLayout.context, R.color.colorGold)),
                 GestureAction(reply, ContextCompat.getColor(gestureLayout.context, R.color.colorBlue))))

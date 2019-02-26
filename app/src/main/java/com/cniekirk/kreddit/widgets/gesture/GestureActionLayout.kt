@@ -9,10 +9,8 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.util.AttributeSet
-import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
-import androidx.core.content.res.ResourcesCompat
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.cniekirk.kreddit.R
 import com.cniekirk.kreddit.ui.subreddit.uimodel.GestureSubmissionData
@@ -21,8 +19,6 @@ import com.cniekirk.kreddit.widgets.gesture.draw.data.GestureActionData
 class GestureActionLayout(context: Context, attributeSet: AttributeSet):
     FrameLayout(context, attributeSet) {
 
-    // The actual content being displayed
-    private lateinit var gestureViewChild: View
     // The overlay to provide gesture based actions
     private var foregroundDrawable: ForegroundDrawable
 
@@ -68,18 +64,15 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet):
                 gestureActionManager = GestureActionManager(foregroundDrawable, gestureActionIcons,
                     gestureActionData, onShowAnimationUpdate = {
 
-                    // On show animation updated
                     val update = it.getAnimatedValue("VIEW_HEIGHT") as Float
                     val layoutParams = this@GestureActionLayout.layoutParams
                     layoutParams.height = update.toInt()
                     this@GestureActionLayout.layoutParams = layoutParams
                     getLocalVisibleRect(viewBounds)
                     foregroundDrawable.bounds = viewBounds
-                    // Maybe need to call invalidate()
 
                 }, onHideAnimationUpdate = {
 
-                    // On hide animation updated
                     val update = it.getAnimatedValue("VIEW_HEIGHT") as Float
                     val layoutParams = this@GestureActionLayout.layoutParams
                     layoutParams.height = update.toInt()
@@ -107,8 +100,8 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet):
         this.gestureSubmissionData = gestureSubmissionData
     }
 
-    fun setActionIcons(actionIcons: List<GestureAction>) {
-        this.gestureActionIcons = actionIcons
+    fun setGestureActions(gestureActions: List<GestureAction>) {
+        this.gestureActionIcons = gestureActions
     }
 
     override fun dispatchDraw(canvas: Canvas) {
@@ -117,7 +110,7 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet):
         if (shouldForegroundBeDrawn) {
 
             // Delegate drawing to controller
-            gestureActionManager.drawManager.draw(canvas)
+            gestureActionManager.draw(canvas)
 
         }
     }
@@ -130,7 +123,6 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet):
         LayerDrawable(arrayOf(foregroundColourDrawable)) {
 
         private var changeColourAnimator =  ValueAnimator()
-        private var alphaColourAnimator =  ValueAnimator()
 
         private val foregroundColourDrawable: ColorDrawable
             get() = getDrawable(0) as ColorDrawable
@@ -141,12 +133,17 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet):
                 return
 
             changeColourAnimator = ValueAnimator.ofArgb(foregroundColourDrawable.color, colourInt)
-            changeColourAnimator.addUpdateListener {
-                foregroundColourDrawable.color = it.animatedValue as Int
-            }
-            changeColourAnimator.duration = 130
-            changeColourAnimator.interpolator = FastOutSlowInInterpolator()
-            changeColourAnimator.start()
+
+            changeColourAnimator.apply {
+
+                duration = 200
+                interpolator = FastOutSlowInInterpolator()
+
+                changeColourAnimator.addUpdateListener {
+                    foregroundColourDrawable.color = it.animatedValue as Int
+                }
+
+            }.start()
 
         }
 
@@ -171,24 +168,7 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet):
         if (touchX > measuredWidth)
             return
 
-        // Refactor to use list size instead of assuming 4
-        if (touchX > 0 && touchX <= itemWidth) {
-
-            foregroundDrawable.animateColourTransition(gestureActionIcons[0].colour)
-
-        } else if (touchX > itemWidth && touchX <= (itemWidth * 2)) {
-
-            foregroundDrawable.animateColourTransition(gestureActionIcons[1].colour)
-
-        } else if (touchX > (itemWidth * 2) && touchX <= (itemWidth * 3)) {
-
-            foregroundDrawable.animateColourTransition(gestureActionIcons[2].colour)
-
-        } else if (touchX > (itemWidth * 3) && touchX <= (itemWidth * 4)) {
-
-            foregroundDrawable.animateColourTransition(gestureActionIcons[3].colour)
-
-        }
+        foregroundDrawable.animateColourTransition(gestureActionIcons[Math.floor(touchX / itemWidth.toDouble()).toInt()].colour)
 
     }
 

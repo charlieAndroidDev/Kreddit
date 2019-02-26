@@ -1,10 +1,11 @@
 package com.cniekirk.kreddit.widgets.gesture
 
 import android.animation.ValueAnimator
-import android.graphics.drawable.Drawable
+import android.graphics.Canvas
 import com.cniekirk.kreddit.widgets.gesture.animation.AnimationManager
 import com.cniekirk.kreddit.widgets.gesture.draw.DrawManager
 import com.cniekirk.kreddit.widgets.gesture.draw.data.GestureActionData
+import kotlin.LazyThreadSafetyMode.NONE
 
 class GestureActionManager(private val foregroundDrawable: GestureActionLayout.ForegroundDrawable,
                            private val gestureIcons: List<GestureAction>,
@@ -14,8 +15,9 @@ class GestureActionManager(private val foregroundDrawable: GestureActionLayout.F
                            private val onHideAnimationComplete: () -> Unit) :
     AnimationManager.AnimationListener {
 
-    val drawManager: DrawManager by lazy { DrawManager(foregroundDrawable, gestureActionData, gestureIcons) }
-    private val animationManager: AnimationManager by lazy { AnimationManager(gestureActionData,  this) }
+    // 'lazy' by default uses double-checked locking to ensure lambda only called once, we know this already so don't need it
+    private val drawManager: DrawManager by lazy(NONE) { DrawManager(foregroundDrawable, gestureActionData, gestureIcons) }
+    private val animationManager: AnimationManager by lazy(NONE) { AnimationManager(gestureActionData,  this) }
 
     fun animateShow() {
 
@@ -26,6 +28,12 @@ class GestureActionManager(private val foregroundDrawable: GestureActionLayout.F
     fun animateHide() {
 
         animationManager.animateHide()
+
+    }
+
+    fun draw(canvas: Canvas) {
+
+        drawManager.draw(canvas)
 
     }
 
