@@ -30,7 +30,7 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet):
 
     private lateinit var gestureActionIcons: List<GestureAction>
 
-    private var foregroundDrawableHeightRatio = 1.0f
+    private var foregroundDrawableHeightRatio: Float
 
     private var shouldForegroundBeDrawn = false
 
@@ -134,7 +134,7 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet):
 
             changeColourAnimator = ValueAnimator.ofArgb(foregroundColourDrawable.color, colourInt)
 
-            changeColourAnimator.apply {
+            with(changeColourAnimator) {
 
                 duration = 200
                 interpolator = FastOutSlowInInterpolator()
@@ -143,7 +143,9 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet):
                     foregroundColourDrawable.color = it.animatedValue as Int
                 }
 
-            }.start()
+                start()
+
+            }
 
         }
 
@@ -151,6 +153,7 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet):
 
     fun displayActions() {
 
+        // Controls the draw calls to only draw to canvas when we need
         shouldForegroundBeDrawn = true
         gestureActionManager.animateShow()
 
@@ -168,6 +171,7 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet):
         if (touchX > measuredWidth)
             return
 
+        // Animate to the appropriate colour
         foregroundDrawable.animateColourTransition(gestureActionIcons[Math.floor(touchX / itemWidth.toDouble()).toInt()].colour)
 
     }
