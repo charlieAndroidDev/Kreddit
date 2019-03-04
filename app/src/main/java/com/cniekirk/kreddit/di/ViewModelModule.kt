@@ -7,7 +7,9 @@ import com.cniekirk.kreddit.utils.AppViewModelFactory
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 @Module
 abstract class ViewModelModule {
 

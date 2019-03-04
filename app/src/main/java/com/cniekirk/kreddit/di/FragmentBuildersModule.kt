@@ -1,6 +1,6 @@
 package com.cniekirk.kreddit.di
 
-import com.cniekirk.kreddit.ui.subreddit.SubredditFragment
+import com.cniekirk.kreddit.ui.subreddit.FragmentSubmission
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -8,6 +8,6 @@ import dagger.android.ContributesAndroidInjector
 abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
-    abstract fun contributeSubredditFragment(): SubredditFragment
+    abstract fun contributeFragmentSubmission(): FragmentSubmission
 
 }

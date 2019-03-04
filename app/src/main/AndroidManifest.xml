@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.cniekirk.kreddit">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
@@ -10,6 +12,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
+        android:name=".FlexApp"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".ui.subreddit.SubredditActivity">
             <intent-filter>
@@ -21,11 +24,14 @@
         <activity android:name=".ui.authentication.LoginActivity" />
 
         <meta-data
+            android:name="net.dean.jraw.android.REDDIT_USERNAME"
+            android:value="chertycherty" />
+        <meta-data
             android:name="net.dean.jraw.android.CLIENT_ID"
-            android:value="(lj0kFE31r8CVyQ)" />
+            android:value="lj0kFE31r8CVyQ" />
         <meta-data
             android:name="net.dean.jraw.android.REDIRECT_URL"
-            android:value="(http://cniekirk.me)" />
+            android:value="http://cniekirk.me" />
     </application>
 
 </manifest>

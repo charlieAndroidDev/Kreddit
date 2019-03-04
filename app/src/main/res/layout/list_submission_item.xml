@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.cniekirk.kreddit.widgets.gesture.GestureActionLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<com.cniekirk.kreddit.widgets.gesture.GestureActionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -10,43 +8,58 @@
     android:clipToPadding="false"
     android:clipChildren="false"
     app:item_expand_ratio="1.3"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="@color/colorPrimaryDark">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
         <TextView
             android:id="@+id/submission_title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="spread"/>
+            app:layout_constraintVertical_chainStyle="spread"
+            android:textColor="@color/colorAccent"/>
 
         <TextView
-            android:id="@+id/submission_author"
+            android:id="@+id/submission_vote_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/submission_title"
             android:layout_marginTop="2dp"
-            android:textAllCaps="true"/>
+            android:textColor="@color/colorBlue"/>
+
+        <TextView
+            android:id="@+id/submission_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toEndOf="@id/submission_vote_count"
+            app:layout_constraintTop_toBottomOf="@id/submission_title"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/colorSubtitleText"/>
 
         <TextView
             android:id="@+id/submission_subreddit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            app:layout_constraintStart_toEndOf="@id/submission_author"
+            app:layout_constraintStart_toEndOf="@id/submission_date"
             app:layout_constraintTop_toBottomOf="@id/submission_title"
             android:layout_marginTop="2dp"
             android:textAllCaps="true"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:textColor="@color/colorSubtitleText"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

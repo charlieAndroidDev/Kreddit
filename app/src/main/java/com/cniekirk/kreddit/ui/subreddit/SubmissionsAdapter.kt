@@ -8,14 +8,15 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.cniekirk.kreddit.R
-import com.cniekirk.kreddit.data.Submission
+import com.cniekirk.kreddit.data.SubmissionUiModel
 import com.cniekirk.kreddit.ui.subreddit.uimodel.GestureSubmissionData
 import com.cniekirk.kreddit.widgets.gesture.GestureAction
 import com.cniekirk.kreddit.widgets.gesture.GestureActionLayout
+import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
 
 class SubmissionsAdapter(private val clickListener: SubmissionItemClickListener,
-                         private val submissions: List<Submission>):
+                         private val submissionUiModels: List<SubmissionUiModel>):
     RecyclerView.Adapter<SubmissionsAdapter.SubmissionViewHolder>() {
 
     init {
@@ -31,14 +32,26 @@ class SubmissionsAdapter(private val clickListener: SubmissionItemClickListener,
     
     override fun onBindViewHolder(holder: SubmissionViewHolder, position: Int) {
         holder.submissionIndex = position
-        holder.submissionTitle.text = submissions[position].title
-        holder.submissionAuthor.text = submissions[position].author
-        holder.submissionSubreddit.text = submissions[position].subReddit
-        holder.gestureLayout.setSubmissionData(GestureSubmissionData(submissions[position].title, 0))
+        holder.submissionTitle.text = submissionUiModels[position].title
+
+        val difference = System.currentTimeMillis() - submissionUiModels[position].date.time
+        val days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS)
+
+        holder.submissionVoteCount.text = submissionUiModels[position].votes.toString()
+        holder.submissionDate.text = "${days}d"
+        holder.submissionSubreddit.text = submissionUiModels[position].subReddit
+        holder.gestureLayout.setSubmissionData(GestureSubmissionData(submissionUiModels[position].title, 0))
     }
 
     override fun getItemCount(): Int {
-        return submissions.size
+        return submissionUiModels.size
+    }
+
+    override fun getItemId(position: Int): Long {
+
+        val item = submissionUiModels[position]
+        return item.hashCode().toLong()
+
     }
 
     open class SubmissionViewHolder(
@@ -50,7 +63,8 @@ class SubmissionsAdapter(private val clickListener: SubmissionItemClickListener,
             Lazy evaluated views to avoid null reference exceptions
          */
         val submissionTitle: TextView by lazy { itemView.findViewById<TextView>(R.id.submission_title) }
-        val submissionAuthor: TextView by lazy { itemView.findViewById<TextView>(R.id.submission_author) }
+        val submissionVoteCount: TextView by lazy { itemView.findViewById<TextView>(R.id.submission_vote_count) }
+        val submissionDate: TextView by lazy { itemView.findViewById<TextView>(R.id.submission_date) }
         val submissionSubreddit: TextView by lazy { itemView.findViewById<TextView>(R.id.submission_subreddit) }
         val gestureLayout: GestureActionLayout by lazy { itemView as GestureActionLayout }
 

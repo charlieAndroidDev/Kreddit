@@ -1,7 +1,8 @@
 package com.cniekirk.kreddit.di
 
-import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import android.util.Log
 import com.cniekirk.kreddit.data.reddit.JrawTokenRefresher
 import dagger.Module
@@ -22,7 +23,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @ExperimentalCoroutinesApi
-@Module
+@Module(includes = [ViewModelModule::class])
 class RedditServiceModule {
 
     @Provides
@@ -32,7 +33,7 @@ class RedditServiceModule {
     }
 
     @Provides
-    fun appInfoProvider(appContext: Application): AppInfoProvider {
+    fun appInfoProvider(appContext: Context): AppInfoProvider {
 
         return ManifestAppInfoProvider(appContext)
 
@@ -40,7 +41,7 @@ class RedditServiceModule {
 
     @Singleton
     @Provides
-    fun sharedPreferencesTokenStore(appContext: Application): SharedPreferencesTokenStore {
+    fun sharedPreferencesTokenStore(appContext: Context): SharedPreferencesTokenStore {
 
         val store = SharedPreferencesTokenStore(appContext)
         store.load()
@@ -53,6 +54,13 @@ class RedditServiceModule {
     fun tokenStore(sharedPreferencesTokenStore: SharedPreferencesTokenStore): TokenStore {
 
         return sharedPreferencesTokenStore
+
+    }
+
+    @Provides
+    fun sharedPreferences(appContext: Context): SharedPreferences {
+
+        return PreferenceManager.getDefaultSharedPreferences(appContext)
 
     }
 
