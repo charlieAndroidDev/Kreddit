@@ -5,8 +5,10 @@ import com.cniekirk.kreddit.FlexApp
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Singleton
 
+@ExperimentalCoroutinesApi
 @Singleton
 @Component(modules = [
     AndroidInjectionModule::class,
