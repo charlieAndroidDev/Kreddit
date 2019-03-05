@@ -3,6 +3,7 @@ package com.cniekirk.kreddit.ui.subreddit
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.util.Log
+import android.util.TypedValue
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
@@ -54,21 +55,19 @@ class SubredditActivity : AppCompatActivity(), HasSupportFragmentInjector, Submi
             submissionFragment = FragmentSubmission()
         }
 
+        submission_page.parentToolbar = flex_toolbar
+
         supportFragmentManager.inTransaction {
             replace(submission_page.id, submissionFragment)
         }
 
     }
 
-    private fun updateSubmissionsList(submissionUiModels: List<SubmissionUiModel>) {
-
-        submissionsAdapter = SubmissionsAdapter(this, submissionUiModels)
-        submissionsAdapter.setHasStableIds(true)
-        submissions_list.adapter = submissionsAdapter
-
-    }
-
     private fun setupSubmissionList() {
+
+        val padTop = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2f, resources.displayMetrics)
+        submissions_list.setPadding(submissions_list.paddingLeft, submissions_list.paddingTop + padTop.toInt(),
+            submissions_list.paddingRight, submissions_list.paddingBottom)
 
         submissions_list.itemAnimator = SubmissionListItemAnimtor(0)
             .withInterpolator(FastOutSlowInInterpolator())
@@ -77,8 +76,13 @@ class SubredditActivity : AppCompatActivity(), HasSupportFragmentInjector, Submi
         val layoutManager = LinearLayoutManager(this)
         submissions_list.layoutManager = layoutManager
         submissions_list.setExpandablePage(submission_page)
-        submissions_list.addItemDecoration(DividerItemDecoration(this, layoutManager.orientation))
-        submissionsAdapter.setHasStableIds(true)
+        submissions_list.adapter = submissionsAdapter
+
+    }
+
+    private fun updateSubmissionsList(submissionUiModels: List<SubmissionUiModel>) {
+
+        submissionsAdapter = SubmissionsAdapter(this, submissionUiModels)
         submissions_list.adapter = submissionsAdapter
 
     }

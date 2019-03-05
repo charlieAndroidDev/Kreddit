@@ -1,7 +1,5 @@
 package com.cniekirk.kreddit.widgets.gesture.draw.data
 
-import com.cniekirk.kreddit.ui.subreddit.uimodel.GestureSubmissionData
-
 data class GestureActionData(
     val noAlpha: Int = 0,
     val opaqueAlpha: Int = 235,
@@ -9,6 +7,5 @@ data class GestureActionData(
     val initialMeasuredHeight: Int,
     val foregroundDrawableHeightRatio: Float,
     val layoutWidth: Int,
-    val layoutHeight: Int,
-    var gestureSubmissionData: GestureSubmissionData?
+    val layoutHeight: Int
 )

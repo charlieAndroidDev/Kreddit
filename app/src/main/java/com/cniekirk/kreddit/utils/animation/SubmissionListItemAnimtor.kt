@@ -7,7 +7,7 @@ class SubmissionListItemAnimtor(itemViewElevation: Int): SlideAlphaAnimator<Subm
 
     override fun getAnimationTranslationY(itemView: View): Float {
 
-        return -dpToPx(32f, itemView.context).toFloat()
+        return dpToPx(32f, itemView.context).toFloat()
 
     }
 

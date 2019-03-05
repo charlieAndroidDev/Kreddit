@@ -10,7 +10,7 @@ import net.dean.jraw.models.TimePeriod
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
-class RetrieveSubredditSubmissionsUseCase
+class RetrieveFrontPageSubmissionsUseCase
 @Inject constructor(val reddit: JrawReddit)
     : BaseUseCase<List<SubmissionUiModel>, String>() {
 

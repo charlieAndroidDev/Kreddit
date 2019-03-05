@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.subreddit.SubredditActivity"
-    android:background="@color/colorPrimaryDark">
+    android:background="@color/colorPrimary"
+    android:backgroundTint="@color/colorPrimary">
     
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/flex_toolbar"
@@ -24,17 +25,14 @@
     <me.saket.inboxrecyclerview.InboxRecyclerView
         android:id="@+id/submissions_list"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:clipChildren="false"
-        android:paddingTop="2dp"
-        android:background="@color/colorPrimaryDark"
-        app:layout_constraintTop_toBottomOf="@id/flex_toolbar"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        android:paddingTop="?android:attr/actionBarSize"
+        android:background="@color/colorPrimary"/>
 
     <me.saket.inboxrecyclerview.page.ExpandablePageLayout
         android:id="@+id/submission_page"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

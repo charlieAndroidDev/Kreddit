@@ -1,5 +1,6 @@
 package com.cniekirk.kreddit.ui.subreddit
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -40,7 +41,7 @@ class SubmissionsAdapter(private val clickListener: SubmissionItemClickListener,
         holder.submissionVoteCount.text = submissionUiModels[position].votes.toString()
         holder.submissionDate.text = "${days}d"
         holder.submissionSubreddit.text = submissionUiModels[position].subReddit
-        holder.gestureLayout.setSubmissionData(GestureSubmissionData(submissionUiModels[position].title, 0))
+        holder.submissionTitle.requestLayout()
     }
 
     override fun getItemCount(): Int {
@@ -66,7 +67,7 @@ class SubmissionsAdapter(private val clickListener: SubmissionItemClickListener,
         val submissionVoteCount: TextView by lazy { itemView.findViewById<TextView>(R.id.submission_vote_count) }
         val submissionDate: TextView by lazy { itemView.findViewById<TextView>(R.id.submission_date) }
         val submissionSubreddit: TextView by lazy { itemView.findViewById<TextView>(R.id.submission_subreddit) }
-        val gestureLayout: GestureActionLayout by lazy { itemView as GestureActionLayout }
+        private val gestureLayout: GestureActionLayout = itemView.findViewById(R.id.submission_container)
 
         var submissionIndex: Int by Delegates.notNull()
         var isLongPressed = false

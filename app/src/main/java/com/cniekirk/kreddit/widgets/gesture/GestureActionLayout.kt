@@ -9,20 +9,20 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.util.AttributeSet
+import android.util.Log
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.cniekirk.kreddit.R
 import com.cniekirk.kreddit.ui.subreddit.uimodel.GestureSubmissionData
 import com.cniekirk.kreddit.widgets.gesture.draw.data.GestureActionData
 
 class GestureActionLayout(context: Context, attributeSet: AttributeSet):
-    FrameLayout(context, attributeSet) {
+    ConstraintLayout(context, attributeSet) {
 
     // The overlay to provide gesture based actions
     private var foregroundDrawable: ForegroundDrawable
-
-    private lateinit var gestureSubmissionData: GestureSubmissionData
 
     private lateinit var gestureActionManager: GestureActionManager
 
@@ -55,10 +55,7 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet):
                     initialMeasuredHeight = measuredHeight,
                     layoutWidth = width,
                     layoutHeight = height,
-                    gestureSubmissionData = null,
                     foregroundDrawableHeightRatio = foregroundDrawableHeightRatio)
-
-                gestureActionData.gestureSubmissionData = gestureSubmissionData
 
                 // Create GestureActionManager with values
                 gestureActionManager = GestureActionManager(foregroundDrawable, gestureActionIcons,
@@ -96,8 +93,43 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet):
 
     }
 
-    fun setSubmissionData(gestureSubmissionData: GestureSubmissionData) {
-        this.gestureSubmissionData = gestureSubmissionData
+    private fun initGestureManager() {
+
+        val viewBounds = Rect()
+
+        gestureActionData = GestureActionData(
+            initialMeasuredHeight = measuredHeight,
+            layoutWidth = width,
+            layoutHeight = height,
+            foregroundDrawableHeightRatio = foregroundDrawableHeightRatio)
+
+        // Create GestureActionManager with values
+        gestureActionManager = GestureActionManager(foregroundDrawable, gestureActionIcons,
+            gestureActionData, onShowAnimationUpdate = {
+
+                val update = it.getAnimatedValue("VIEW_HEIGHT") as Float
+                val layoutParams = this@GestureActionLayout.layoutParams
+                layoutParams.height = update.toInt()
+                this@GestureActionLayout.layoutParams = layoutParams
+                getLocalVisibleRect(viewBounds)
+                foregroundDrawable.bounds = viewBounds
+
+            }, onHideAnimationUpdate = {
+
+                val update = it.getAnimatedValue("VIEW_HEIGHT") as Float
+                val layoutParams = this@GestureActionLayout.layoutParams
+                layoutParams.height = update.toInt()
+                this@GestureActionLayout.layoutParams = layoutParams
+                getLocalVisibleRect(viewBounds)
+                foregroundDrawable.bounds = viewBounds
+
+            }, onHideAnimationComplete = {
+
+                shouldForegroundBeDrawn = false
+                invalidate()
+
+            })
+
     }
 
     fun setGestureActions(gestureActions: List<GestureAction>) {
@@ -152,6 +184,8 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet):
     }
 
     fun displayActions() {
+
+        initGestureManager()
 
         // Controls the draw calls to only draw to canvas when we need
         shouldForegroundBeDrawn = true
