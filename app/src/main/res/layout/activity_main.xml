@@ -33,6 +33,7 @@
     <me.saket.inboxrecyclerview.page.ExpandablePageLayout
         android:id="@+id/submission_page"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:elevation="4dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

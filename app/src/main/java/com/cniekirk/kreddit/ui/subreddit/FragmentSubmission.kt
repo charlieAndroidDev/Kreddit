@@ -1,6 +1,7 @@
 package com.cniekirk.kreddit.ui.subreddit
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ScrollView
 import androidx.fragment.app.Fragment
 import com.cniekirk.kreddit.R
+import com.cniekirk.kreddit.data.SubmissionUiModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_submission.*
 import me.saket.inboxrecyclerview.globalVisibleRect
@@ -41,6 +43,18 @@ class FragmentSubmission: Fragment() {
                 else -> InterceptResult.IGNORED
             }
         }
+
+    }
+
+    fun populateUi(submissionUiModel: SubmissionUiModel) {
+
+        submission_title.text = submissionUiModel.title
+        submission_content.text = submissionUiModel.content
+
+//        Handler().post {
+//            submission_content.requestLayout()
+//            submission_content_container.requestLayout()
+//        }
 
     }
 

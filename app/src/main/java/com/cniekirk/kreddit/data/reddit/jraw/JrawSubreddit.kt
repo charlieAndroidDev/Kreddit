@@ -38,7 +38,7 @@ class JrawSubreddit constructor(
 
                 val uiSubmissions = subList.map { submission ->
                     SubmissionUiModel(submission.uniqueId, submission.title,
-                        submission.author, "R/${submission.subreddit}",
+                        submission.selfText, submission.author, "R/${submission.subreddit}",
                         submission.created, submission.score, submission.thumbnail)
                 }.toList()
 

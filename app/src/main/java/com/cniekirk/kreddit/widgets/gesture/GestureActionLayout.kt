@@ -30,54 +30,31 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet):
 
     private lateinit var gestureActionIcons: List<GestureAction>
 
-    private var foregroundDrawableHeightRatio: Float
-
     private var shouldForegroundBeDrawn = false
 
     init {
 
-        val typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.GestureActionLayout)
-        foregroundDrawableHeightRatio = typedArray.getFloat(R.styleable.GestureActionLayout_item_expand_ratio, 1.0f)
-        typedArray.recycle()
+        val viewBounds = Rect()
 
         foregroundDrawable = ForegroundDrawable(ColorDrawable(Color.DKGRAY))
         foregroundDrawable.alpha = 0
-        foregroundDrawable.bounds = Rect(left, top, right, bottom)
         foregroundDrawable.callback = this
-
-        val viewBounds = Rect()
 
         viewTreeObserver.addOnGlobalLayoutListener(object: ViewTreeObserver.OnGlobalLayoutListener {
 
             override fun onGlobalLayout() {
 
+                getLocalVisibleRect(viewBounds)
+                foregroundDrawable.bounds = viewBounds
+
                 gestureActionData = GestureActionData(
                     initialMeasuredHeight = measuredHeight,
                     layoutWidth = width,
-                    layoutHeight = height,
-                    foregroundDrawableHeightRatio = foregroundDrawableHeightRatio)
+                    layoutHeight = height)
 
                 // Create GestureActionManager with values
                 gestureActionManager = GestureActionManager(foregroundDrawable, gestureActionIcons,
-                    gestureActionData, onShowAnimationUpdate = {
-
-                    val update = it.getAnimatedValue("VIEW_HEIGHT") as Float
-                    val layoutParams = this@GestureActionLayout.layoutParams
-                    layoutParams.height = update.toInt()
-                    this@GestureActionLayout.layoutParams = layoutParams
-                    getLocalVisibleRect(viewBounds)
-                    foregroundDrawable.bounds = viewBounds
-
-                }, onHideAnimationUpdate = {
-
-                    val update = it.getAnimatedValue("VIEW_HEIGHT") as Float
-                    val layoutParams = this@GestureActionLayout.layoutParams
-                    layoutParams.height = update.toInt()
-                    this@GestureActionLayout.layoutParams = layoutParams
-                    getLocalVisibleRect(viewBounds)
-                    foregroundDrawable.bounds = viewBounds
-
-                }, onHideAnimationComplete = {
+                    gestureActionData, onHideAnimationComplete = {
 
                     shouldForegroundBeDrawn = false
                     invalidate()
@@ -100,30 +77,14 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet):
         gestureActionData = GestureActionData(
             initialMeasuredHeight = measuredHeight,
             layoutWidth = width,
-            layoutHeight = height,
-            foregroundDrawableHeightRatio = foregroundDrawableHeightRatio)
+            layoutHeight = height)
+
+        getLocalVisibleRect(viewBounds)
+        foregroundDrawable.bounds = viewBounds
 
         // Create GestureActionManager with values
         gestureActionManager = GestureActionManager(foregroundDrawable, gestureActionIcons,
-            gestureActionData, onShowAnimationUpdate = {
-
-                val update = it.getAnimatedValue("VIEW_HEIGHT") as Float
-                val layoutParams = this@GestureActionLayout.layoutParams
-                layoutParams.height = update.toInt()
-                this@GestureActionLayout.layoutParams = layoutParams
-                getLocalVisibleRect(viewBounds)
-                foregroundDrawable.bounds = viewBounds
-
-            }, onHideAnimationUpdate = {
-
-                val update = it.getAnimatedValue("VIEW_HEIGHT") as Float
-                val layoutParams = this@GestureActionLayout.layoutParams
-                layoutParams.height = update.toInt()
-                this@GestureActionLayout.layoutParams = layoutParams
-                getLocalVisibleRect(viewBounds)
-                foregroundDrawable.bounds = viewBounds
-
-            }, onHideAnimationComplete = {
+            gestureActionData, onHideAnimationComplete = {
 
                 shouldForegroundBeDrawn = false
                 invalidate()
@@ -189,6 +150,7 @@ class GestureActionLayout(context: Context, attributeSet: AttributeSet):
 
         // Controls the draw calls to only draw to canvas when we need
         shouldForegroundBeDrawn = true
+        invalidate()
         gestureActionManager.animateShow()
 
     }

@@ -1,15 +1,11 @@
 package com.cniekirk.kreddit.ui.subreddit
 
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.util.Log
-import android.util.TypedValue
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cniekirk.kreddit.R
 import com.cniekirk.kreddit.core.extensions.inTransaction
@@ -21,7 +17,6 @@ import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
-import kotlin.LazyThreadSafetyMode.NONE
 
 @ExperimentalCoroutinesApi
 class SubredditActivity : AppCompatActivity(), HasSupportFragmentInjector, SubmissionItemClickListener {
@@ -31,6 +26,7 @@ class SubredditActivity : AppCompatActivity(), HasSupportFragmentInjector, Submi
     @Inject
     lateinit var viewModelFactory: AppViewModelFactory
 
+    private var submissionFragment = FragmentSubmission()
     private var submissionsAdapter = SubmissionsAdapter(this, emptyList())
     private lateinit var subredditViewModel: SubredditViewModel
 
@@ -45,15 +41,12 @@ class SubredditActivity : AppCompatActivity(), HasSupportFragmentInjector, Submi
         subredditViewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(SubredditViewModel::class.java)
         subredditViewModel.submissions.observe(this, Observer { updateSubmissionsList(it) })
+        subredditViewModel.clickedSubmission.observe(this, Observer { submissionFragment?.populateUi(it) })
         subredditViewModel.loadSubredditSubmissions("")
 
     }
 
     private fun setupSubmissionPage() {
-        var submissionFragment = supportFragmentManager.findFragmentById(submission_page.id) as FragmentSubmission?
-        if(submissionFragment == null) {
-            submissionFragment = FragmentSubmission()
-        }
 
         submission_page.parentToolbar = flex_toolbar
 
@@ -64,10 +57,6 @@ class SubredditActivity : AppCompatActivity(), HasSupportFragmentInjector, Submi
     }
 
     private fun setupSubmissionList() {
-
-        val padTop = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2f, resources.displayMetrics)
-        submissions_list.setPadding(submissions_list.paddingLeft, submissions_list.paddingTop + padTop.toInt(),
-            submissions_list.paddingRight, submissions_list.paddingBottom)
 
         submissions_list.itemAnimator = SubmissionListItemAnimtor(0)
             .withInterpolator(FastOutSlowInInterpolator())
@@ -98,6 +87,7 @@ class SubredditActivity : AppCompatActivity(), HasSupportFragmentInjector, Submi
     }
 
     override fun onItemClick(submission: Int) {
+        subredditViewModel.clickSubmission(submission)
         submissions_list.expandItem(submissionsAdapter.getItemId(submission))
     }
 

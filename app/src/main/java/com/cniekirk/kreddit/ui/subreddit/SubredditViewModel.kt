@@ -15,10 +15,17 @@ class SubredditViewModel @Inject constructor(
     ): BaseViewModel() {
 
     val submissions: MutableLiveData<List<SubmissionUiModel>> = MutableLiveData()
+    val clickedSubmission: MutableLiveData<SubmissionUiModel> = MutableLiveData()
 
     fun loadSubredditSubmissions(params: String) {
 
         retrieveFrontPageSubmissionsUseCase(params) { it.either(::handleFailure, ::handleSubmissions) }
+
+    }
+
+    fun clickSubmission(submissionIndex: Int) {
+
+        clickedSubmission.value = submissions.value?.get(submissionIndex)
 
     }
 

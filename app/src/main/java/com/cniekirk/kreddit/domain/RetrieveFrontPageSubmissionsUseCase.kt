@@ -15,7 +15,7 @@ class RetrieveFrontPageSubmissionsUseCase
     : BaseUseCase<List<SubmissionUiModel>, String>() {
 
     override suspend fun run(params: String): Either<Failure, List<SubmissionUiModel>> {
-        return reddit.subreddit().getSubmissions(params, SubredditSort.HOT, TimePeriod.DAY, true, 50)
+        return reddit.subreddit().getSubmissions(params, SubredditSort.BEST, TimePeriod.DAY, true, 50)
     }
 
 }

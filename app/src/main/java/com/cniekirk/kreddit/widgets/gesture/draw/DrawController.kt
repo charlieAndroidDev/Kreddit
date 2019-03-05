@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
+import android.util.Log
 import com.cniekirk.kreddit.widgets.gesture.GestureAction
 import com.cniekirk.kreddit.widgets.gesture.GestureActionLayout
 import com.cniekirk.kreddit.widgets.gesture.draw.data.GestureActionData
@@ -24,6 +25,7 @@ class DrawController(private val gestureActionData: GestureActionData,
     fun draw(canvas: Canvas) {
 
         // Draw the background colour of the solid overlay the provides actions
+        Log.d("FD", "Alpha = ${foregroundDrawable.alpha}")
         foregroundDrawable.draw(canvas)
 
         // Draw each gesture action icon
@@ -53,7 +55,7 @@ class DrawController(private val gestureActionData: GestureActionData,
 
         textRevealAlpha = valueAnimator.getAnimatedValue("TEXT_REVEAL_ALPHA") as Int
         foregroundDrawable.alpha = valueAnimator.getAnimatedValue("FOREGROUND_DRAWABLE_ALPHA") as Int
-        actionIconHeight = (valueAnimator.getAnimatedValue("VIEW_HEIGHT") as Float).toInt()
+        //actionIconHeight = (valueAnimator.getAnimatedValue("VIEW_HEIGHT") as Float).toInt()
 
     }
 

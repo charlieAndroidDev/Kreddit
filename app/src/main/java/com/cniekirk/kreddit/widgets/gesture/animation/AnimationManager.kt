@@ -27,12 +27,10 @@ class AnimationManager(private val gestureActionData: GestureActionData,
             0, gestureActionData.initialMeasuredHeight / 2)
         val foregroundDrawableAlpha = PropertyValuesHolder.ofInt("FOREGROUND_DRAWABLE_ALPHA",
             gestureActionData.noAlpha, gestureActionData.fullAlpha)
-        val viewHeight = PropertyValuesHolder.ofFloat("VIEW_HEIGHT", gestureActionData.initialMeasuredHeight.toFloat(),
-            (gestureActionData.initialMeasuredHeight * gestureActionData.foregroundDrawableHeightRatio))
 
         val revealAnimator = ValueAnimator()
         revealAnimator.setValues(textRevealAlpha, textBackgroundAlpha, textHeight,
-            foregroundDrawableAlpha, viewHeight)
+            foregroundDrawableAlpha)
 
         revealAnimator.duration = 300
         revealAnimator.interpolator = FastOutSlowInInterpolator()
@@ -53,12 +51,10 @@ class AnimationManager(private val gestureActionData: GestureActionData,
             gestureActionData.initialMeasuredHeight / 2, 0)
         val foregroundDrawableAlpha = PropertyValuesHolder.ofInt("FOREGROUND_DRAWABLE_ALPHA",
             gestureActionData.fullAlpha, gestureActionData.noAlpha)
-        val viewHeight = PropertyValuesHolder.ofFloat("VIEW_HEIGHT", (gestureActionData.initialMeasuredHeight * gestureActionData.foregroundDrawableHeightRatio),
-            gestureActionData.initialMeasuredHeight.toFloat())
 
         val revealAnimator = ValueAnimator()
         revealAnimator.setValues(textHideAlpha, textBackgroundAlpha, textHeight,
-            foregroundDrawableAlpha, viewHeight)
+            foregroundDrawableAlpha)
 
         revealAnimator.duration = 300
         revealAnimator.interpolator = FastOutSlowInInterpolator()

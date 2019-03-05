@@ -5,7 +5,6 @@ data class GestureActionData(
     val opaqueAlpha: Int = 235,
     val fullAlpha: Int = 255,
     val initialMeasuredHeight: Int,
-    val foregroundDrawableHeightRatio: Float,
     val layoutWidth: Int,
     val layoutHeight: Int
 )

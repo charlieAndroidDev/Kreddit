@@ -10,8 +10,6 @@ import kotlin.LazyThreadSafetyMode.NONE
 class GestureActionManager(private val foregroundDrawable: GestureActionLayout.ForegroundDrawable,
                            private val gestureIcons: List<GestureAction>,
                            private val gestureActionData: GestureActionData,
-                           private val onShowAnimationUpdate: (ValueAnimator) -> Unit,
-                           private val onHideAnimationUpdate: (ValueAnimator) -> Unit,
                            private val onHideAnimationComplete: () -> Unit) :
     AnimationManager.AnimationListener {
 
@@ -40,14 +38,12 @@ class GestureActionManager(private val foregroundDrawable: GestureActionLayout.F
     override fun onShowAnimationUpdated(valueAnimator: ValueAnimator) {
 
         drawManager.updateDrawValues(valueAnimator)
-        onShowAnimationUpdate(valueAnimator)
 
     }
 
     override fun onHideAnimationUpdated(valueAnimator: ValueAnimator) {
 
         drawManager.updateDrawValues(valueAnimator)
-        onHideAnimationUpdate(valueAnimator)
 
     }
 
