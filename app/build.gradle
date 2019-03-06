@@ -47,6 +47,7 @@ dependencies {
     implementation 'com.jakewharton.threetenabp:threetenabp:1.1.2'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.13.1'
     implementation 'me.saket:inboxrecyclerview:1.0.0-rc1'
+    implementation 'ru.noties:markwon:2.0.1'
     kapt "androidx.room:room-compiler:$room_version"
     kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
     kapt 'com.github.bumptech.glide:compiler:4.8.0'

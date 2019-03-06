@@ -1,6 +1,5 @@
 package com.cniekirk.kreddit.ui.subreddit
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -9,8 +8,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.cniekirk.kreddit.R
-import com.cniekirk.kreddit.data.SubmissionUiModel
-import com.cniekirk.kreddit.ui.subreddit.uimodel.GestureSubmissionData
+import com.cniekirk.kreddit.ui.subreddit.uimodel.SubmissionUiModel
 import com.cniekirk.kreddit.widgets.gesture.GestureAction
 import com.cniekirk.kreddit.widgets.gesture.GestureActionLayout
 import java.util.concurrent.TimeUnit

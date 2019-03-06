@@ -1,4 +1,4 @@
-package com.cniekirk.kreddit.data
+package com.cniekirk.kreddit.ui.subreddit.uimodel
 
 import java.util.Date
 
@@ -10,5 +10,6 @@ data class SubmissionUiModel(
     val subReddit: String,
     val date: Date,
     val votes: Int,
-    val thumbnailUrl: String?
+    val thumbnailUrl: String?,
+    val url: String?
 )

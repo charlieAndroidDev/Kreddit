@@ -1,7 +1,8 @@
 package com.cniekirk.kreddit.data.reddit.jraw
 
 import com.cniekirk.kreddit.core.platform.NetworkHandler
-import com.cniekirk.kreddit.data.SubmissionUiModel
+import com.cniekirk.kreddit.data.SubmissionRequestOptions
+import com.cniekirk.kreddit.ui.subreddit.uimodel.SubmissionUiModel
 import com.cniekirk.kreddit.data.reddit.Reddit
 import com.cniekirk.kreddit.utils.Either
 import com.cniekirk.kreddit.utils.Failure
@@ -23,23 +24,21 @@ class JrawSubreddit constructor(
     private val networkHandler: NetworkHandler
 ): Reddit.Subreddit {
 
-    override fun getSubmissions(
-        subredditName: String,
-        sort: SubredditSort,
-        timePeriod: TimePeriod,
-        frontPage: Boolean,
-        limit: Int
-    ): Either<Failure, List<SubmissionUiModel>> {
+    override fun getSubmissions(submissionRequestOptions: SubmissionRequestOptions):
+            Either<Failure, List<SubmissionUiModel>> {
 
         return when(networkHandler.isConnected) {
             true -> {
-                val iterator = submissions(subredditName, sort, timePeriod, frontPage, limit)
+                val iterator = submissions(submissionRequestOptions.subredditName, submissionRequestOptions.sort,
+                    submissionRequestOptions.timePeriod, submissionRequestOptions.isFrontPage, submissionRequestOptions.limit)
                 val subList = iterator.next().toList()
 
                 val uiSubmissions = subList.map { submission ->
-                    SubmissionUiModel(submission.uniqueId, submission.title,
+                    SubmissionUiModel(
+                        submission.uniqueId, submission.title,
                         submission.selfText, submission.author, "R/${submission.subreddit}",
-                        submission.created, submission.score, submission.thumbnail)
+                        submission.created, submission.score, submission.thumbnail, submission.url
+                    )
                 }.toList()
 
                 Either.Right(uiSubmissions)

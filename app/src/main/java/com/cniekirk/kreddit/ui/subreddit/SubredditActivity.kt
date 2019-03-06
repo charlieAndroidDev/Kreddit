@@ -1,6 +1,7 @@
 package com.cniekirk.kreddit.ui.subreddit
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
@@ -9,7 +10,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cniekirk.kreddit.R
 import com.cniekirk.kreddit.core.extensions.inTransaction
-import com.cniekirk.kreddit.data.SubmissionUiModel
+import com.cniekirk.kreddit.ui.subreddit.uimodel.SubmissionUiModel
+import com.cniekirk.kreddit.ui.subreddit.uimodel.SubredditRequests
 import com.cniekirk.kreddit.utils.AppViewModelFactory
 import com.cniekirk.kreddit.utils.animation.SubmissionListItemAnimtor
 import dagger.android.DispatchingAndroidInjector
@@ -41,8 +43,14 @@ class SubredditActivity : AppCompatActivity(), HasSupportFragmentInjector, Submi
         subredditViewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(SubredditViewModel::class.java)
         subredditViewModel.submissions.observe(this, Observer { updateSubmissionsList(it) })
-        subredditViewModel.clickedSubmission.observe(this, Observer { submissionFragment?.populateUi(it) })
-        subredditViewModel.loadSubredditSubmissions("")
+        subredditViewModel.clickedSubmission.observe(this, Observer { submissionFragment.populateUi(it) })
+        subredditViewModel.isLoadingSubmissions.observe(this, Observer {
+            when {
+                it -> progress_bar.visibility = View.VISIBLE
+                else -> progress_bar.visibility = View.GONE
+            }
+        })
+        subredditViewModel.loadSubredditSubmissions(SubredditRequests.frontPage())
 
     }
 

@@ -1,20 +1,22 @@
 package com.cniekirk.kreddit.ui.subreddit
 
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ScrollView
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.bumptech.glide.TransitionOptions
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.cniekirk.kreddit.R
-import com.cniekirk.kreddit.data.SubmissionUiModel
-import kotlinx.android.synthetic.main.activity_main.*
+import com.cniekirk.kreddit.core.extensions.isImage
+import com.cniekirk.kreddit.ui.subreddit.uimodel.SubmissionUiModel
 import kotlinx.android.synthetic.main.fragment_submission.*
 import me.saket.inboxrecyclerview.globalVisibleRect
 import me.saket.inboxrecyclerview.page.ExpandablePageLayout
 import me.saket.inboxrecyclerview.page.InterceptResult
+import ru.noties.markwon.Markwon
 
 class FragmentSubmission: Fragment() {
 
@@ -48,13 +50,37 @@ class FragmentSubmission: Fragment() {
 
     fun populateUi(submissionUiModel: SubmissionUiModel) {
 
-        submission_title.text = submissionUiModel.title
-        submission_content.text = submissionUiModel.content
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(submission_layout)
+        constraintSet.connect(R.id.submission_title, ConstraintSet.TOP, R.id.close_btn, ConstraintSet.BOTTOM, 0)
+        constraintSet.applyTo(submission_layout)
 
-//        Handler().post {
-//            submission_content.requestLayout()
-//            submission_content_container.requestLayout()
-//        }
+        // Reset so no image is displayed
+        submission_image.visibility = View.GONE
+        submission_content_container.visibility = View.VISIBLE
+        submission_title.text = submissionUiModel.title
+
+        // Need to do this async
+        submissionUiModel.content?.let {
+            Markwon.setMarkdown(submission_content, it)
+        }
+
+        submissionUiModel.url?.let {
+
+            if (it.isImage()) {
+
+                submission_image.visibility = View.VISIBLE
+                Glide.with(requireContext()).load(it)
+                    .transition(DrawableTransitionOptions.withCrossFade()).into(submission_image)
+                submission_content_container.visibility = View.GONE
+
+                //val imageConstraintSet = ConstraintSet()
+                constraintSet.clone(submission_layout)
+                constraintSet.connect(R.id.submission_title, ConstraintSet.TOP, R.id.submission_image, ConstraintSet.BOTTOM, 0)
+                constraintSet.applyTo(submission_layout)
+
+            }
+        }
 
     }
 

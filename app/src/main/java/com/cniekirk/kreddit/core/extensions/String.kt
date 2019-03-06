@@ -4,3 +4,7 @@ package com.cniekirk.kreddit.core.extensions
 infix fun String.contains(otherString: String): Boolean {
     return this.contains(otherString)
 }
+
+fun String.isImage(): Boolean {
+    return this.endsWith(".png") || this.endsWith(".jpg") || this.endsWith(".jpeg")
+}

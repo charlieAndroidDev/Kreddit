@@ -1,5 +1,7 @@
 package com.cniekirk.kreddit.data.reddit
 
+import com.cniekirk.kreddit.data.SubmissionRequestOptions
+import com.cniekirk.kreddit.ui.subreddit.uimodel.SubmissionUiModel
 import com.cniekirk.kreddit.utils.Either
 import com.cniekirk.kreddit.utils.Failure
 import net.dean.jraw.models.*
@@ -27,12 +29,8 @@ interface Reddit {
                         limit: Int)
         : Iterator<Listing<Submission>>
 
-        fun getSubmissions(subredditName: String,
-                           sort: SubredditSort,
-                           timePeriod: TimePeriod,
-                           frontPage: Boolean,
-                           limit: Int)
-        : Either<Failure, List<com.cniekirk.kreddit.data.SubmissionUiModel>>
+        fun getSubmissions(submissionRequestOptions: SubmissionRequestOptions)
+        : Either<Failure, List<SubmissionUiModel>>
 
     }
 
