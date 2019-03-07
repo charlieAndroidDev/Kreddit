@@ -1,6 +1,8 @@
 package com.cniekirk.kreddit.ui.subreddit
 
 import android.os.Bundle
+import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,7 +54,16 @@ class FragmentSubmission: Fragment() {
 
         val constraintSet = ConstraintSet()
         constraintSet.clone(submission_layout)
-        constraintSet.connect(R.id.submission_title, ConstraintSet.TOP, R.id.close_btn, ConstraintSet.BOTTOM, 0)
+
+        val marginPx = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            8f,
+            resources.displayMetrics
+        )
+
+        Log.d("FRAGMENT", "Margin: ${marginPx.toInt()}")
+
+        constraintSet.connect(R.id.submission_title, ConstraintSet.TOP, R.id.close_btn, ConstraintSet.BOTTOM, marginPx.toInt())
         constraintSet.applyTo(submission_layout)
 
         // Reset so no image is displayed
@@ -76,7 +87,7 @@ class FragmentSubmission: Fragment() {
 
                 //val imageConstraintSet = ConstraintSet()
                 constraintSet.clone(submission_layout)
-                constraintSet.connect(R.id.submission_title, ConstraintSet.TOP, R.id.submission_image, ConstraintSet.BOTTOM, 0)
+                constraintSet.connect(R.id.submission_title, ConstraintSet.TOP, R.id.submission_image, ConstraintSet.BOTTOM, marginPx.toInt())
                 constraintSet.applyTo(submission_layout)
 
             }
