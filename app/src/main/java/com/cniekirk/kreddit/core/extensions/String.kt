@@ -6,5 +6,10 @@ infix fun String.contains(otherString: String): Boolean {
 }
 
 fun String.isImage(): Boolean {
-    return this.endsWith(".png") || this.endsWith(".jpg") || this.endsWith(".jpeg")
+    return this.endsWith(".png") || this.endsWith(".jpg") ||
+            this.endsWith(".jpeg") || this.endsWith(".gif") || this.endsWith(".gifv")
+}
+
+fun String.isGif(): Boolean {
+    return this.endsWith(".gif") || this.endsWith(".gifv")
 }

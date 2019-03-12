@@ -44,9 +44,9 @@ class SubredditActivity : AppCompatActivity(), HasSupportFragmentInjector, Submi
             .get(SubredditViewModel::class.java)
         subredditViewModel.submissions.observe(this, Observer { updateSubmissionsList(it) })
         subredditViewModel.clickedSubmission.observe(this, Observer { submissionFragment.populateUi(it) })
-        subredditViewModel.isLoadingSubmissions.observe(this, Observer {
+        subredditViewModel.isLoadingSubmissions.observe(this, Observer { isLoading ->
             when {
-                it -> progress_bar.visibility = View.VISIBLE
+                isLoading -> progress_bar.visibility = View.VISIBLE
                 else -> progress_bar.visibility = View.GONE
             }
         })
