@@ -13,6 +13,7 @@ import javax.inject.Singleton
 @Component(modules = [
     AndroidInjectionModule::class,
     RedditServiceModule::class,
+    ImgurServiceModule::class,
     MainActivityModule::class
 ])
 interface AppComponent {

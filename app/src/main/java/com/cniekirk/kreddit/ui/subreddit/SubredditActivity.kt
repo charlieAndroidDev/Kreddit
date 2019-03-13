@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cniekirk.kreddit.R
 import com.cniekirk.kreddit.core.extensions.inTransaction
+import com.cniekirk.kreddit.ui.submission.FragmentSubmission
 import com.cniekirk.kreddit.ui.subreddit.uimodel.SubmissionUiModel
 import com.cniekirk.kreddit.ui.subreddit.uimodel.SubredditRequests
 import com.cniekirk.kreddit.utils.AppViewModelFactory
