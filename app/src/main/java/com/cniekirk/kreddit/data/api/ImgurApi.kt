@@ -12,7 +12,7 @@ interface ImgurApi {
         ImgurConstants.HEADER_AUTH_IMGUR,
         ImgurConstants.HEADER_RAPIDAPI_KEY
     )
-    @GET("/image/{imageHash}")
+    @GET("/3/image/{imageHash}")
     fun getImageInformation(@Path("imageHash") imageHash: String): Call<ImageInformation>
 
 }

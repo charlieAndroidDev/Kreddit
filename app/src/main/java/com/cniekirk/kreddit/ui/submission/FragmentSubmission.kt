@@ -2,6 +2,7 @@ package com.cniekirk.kreddit.ui.submission
 
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -17,7 +19,9 @@ import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.load.resource.gif.GifDrawable
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.cniekirk.kreddit.R
@@ -91,7 +95,8 @@ class FragmentSubmission: Fragment(), Injectable {
             resources.displayMetrics
         )
 
-        if (imageInformation.data.type has "video") {
+        if (imageInformation.data.type has "video"
+            || imageInformation.data.type has "gif") {
 
             player_view.visibility = View.VISIBLE
             val player = ExoPlayerFactory.newSimpleInstance(requireContext())
@@ -143,13 +148,7 @@ class FragmentSubmission: Fragment(), Injectable {
         player_view.visibility = View.GONE
         submission_image.visibility = View.GONE
         web_link_container.visibility = View.GONE
-        submission_content_container.visibility = View.VISIBLE
-        submission_title.text = submissionUiModel.title
-
-        // Need to do this async
-        submissionUiModel.content?.let {
-            Markwon.setMarkdown(submission_content, it)
-        }
+        submission_content_container.visibility = View.GONE
 
         submissionUiModel.url?.let {
 
@@ -157,8 +156,8 @@ class FragmentSubmission: Fragment(), Injectable {
 
                 if (it.isImgur()) {
                     val imageHash = it.substring(it.lastIndexOf("/"), it.lastIndexOf("."))
-                    Log.d("FRAGMENT", "ImageHash: $imageHash")
                     submissionViewModel.getImageInformation(imageHash)
+                    submission_title.text = submissionUiModel.title
                     return@let
                 }
 
@@ -166,18 +165,105 @@ class FragmentSubmission: Fragment(), Injectable {
 
                 if (it.isGif()) {
                     Glide.with(requireContext()).asGif().load(it)
-                        .transition(DrawableTransitionOptions.withCrossFade()).into(submission_image)
+                        .transition(DrawableTransitionOptions.withCrossFade()).listener(
+                            object: RequestListener<GifDrawable> {
+                                override fun onLoadFailed(
+                                    e: GlideException?,
+                                    model: Any?,
+                                    target: Target<GifDrawable>?,
+                                    isFirstResource: Boolean
+                                ): Boolean {
+
+                                    return false
+
+                                }
+
+                                override fun onResourceReady(
+                                    resource: GifDrawable?,
+                                    model: Any?,
+                                    target: Target<GifDrawable>?,
+                                    dataSource: DataSource?,
+                                    isFirstResource: Boolean
+                                ): Boolean {
+
+                                    submission_title.text = submissionUiModel.title
+
+                                    submission_content_container.visibility = View.GONE
+
+                                    constraintSet.clone(submission_layout)
+                                    constraintSet.connect(R.id.submission_title, ConstraintSet.TOP, R.id.submission_image, ConstraintSet.BOTTOM, marginPx.toInt())
+                                    constraintSet.applyTo(submission_layout)
+
+                                    val bmp = resource?.toBitmap()
+                                    bmp?.let {
+
+                                        val palette = Palette.from(bmp).generate()
+                                        val dominantColour = palette.getDominantColor(Color.WHITE)
+
+                                        val lightness = Color.red(dominantColour) + Color.blue(dominantColour) + Color.green(dominantColour)
+                                        when {
+                                            lightness < 300 -> close_btn.setImageResource(R.drawable.ic_close_white)
+                                            else -> close_btn.setImageResource(R.drawable.ic_close_black_24dp)
+                                        }
+
+                                    }
+
+                                    return false
+
+                                }
+
+
+                            }
+                        ).into(submission_image)
                 } else {
-                    Glide.with(requireContext()).load(it)
-                        .transition(DrawableTransitionOptions.withCrossFade()).into(submission_image)
+                    Glide.with(requireContext()).asBitmap().load(it)
+                        .transition(BitmapTransitionOptions.withCrossFade()).listener(
+                            object: RequestListener<Bitmap> {
+                                override fun onLoadFailed(
+                                    e: GlideException?,
+                                    model: Any?,
+                                    target: Target<Bitmap>?,
+                                    isFirstResource: Boolean
+                                ): Boolean {
+
+                                    return false
+
+                                }
+
+                                override fun onResourceReady(
+                                    resource: Bitmap?,
+                                    model: Any?,
+                                    target: Target<Bitmap>?,
+                                    dataSource: DataSource?,
+                                    isFirstResource: Boolean
+                                ): Boolean {
+                                    submission_title.text = submissionUiModel.title
+                                    submission_content_container.visibility = View.GONE
+
+                                    constraintSet.clone(submission_layout)
+                                    constraintSet.connect(R.id.submission_title, ConstraintSet.TOP, R.id.submission_image, ConstraintSet.BOTTOM, marginPx.toInt())
+                                    constraintSet.applyTo(submission_layout)
+
+                                    resource?.let {
+
+                                        val palette = Palette.from(resource).generate()
+                                        val dominantColour = palette.getDominantColor(Color.WHITE)
+
+                                        val lightness = Color.red(dominantColour) + Color.blue(dominantColour) + Color.green(dominantColour)
+                                        when {
+                                            lightness < 300 -> close_btn.setImageResource(R.drawable.ic_close_white)
+                                            else -> close_btn.setImageResource(R.drawable.ic_close_black_24dp)
+                                        }
+
+                                    }
+
+                                    return false
+
+                                }
+
+                            }
+                        ).into(submission_image)
                 }
-
-                submission_content_container.visibility = View.GONE
-
-                //val imageConstraintSet = ConstraintSet()
-                constraintSet.clone(submission_layout)
-                constraintSet.connect(R.id.submission_title, ConstraintSet.TOP, R.id.submission_image, ConstraintSet.BOTTOM, marginPx.toInt())
-                constraintSet.applyTo(submission_layout)
 
             } else if (submissionUiModel.content != null) {
 
@@ -227,13 +313,23 @@ class FragmentSubmission: Fragment(), Injectable {
                     }).into(web_link_thumbnail)
 
                 submission_content_container.visibility = View.GONE
-                submission_title.visibility = View.GONE
+                submission_title.text = submissionUiModel.title
 
                 web_link_title.text = submissionUiModel.url
 
                 constraintSet.clone(submission_layout)
                 constraintSet.connect(R.id.web_link_container, ConstraintSet.TOP, R.id.close_btn, ConstraintSet.BOTTOM, marginPx.toInt())
+                constraintSet.connect(R.id.submission_title, ConstraintSet.TOP, R.id.web_link_container, ConstraintSet.BOTTOM, marginPx.toInt())
                 constraintSet.applyTo(submission_layout)
+
+            } else {
+
+                submission_content_container.visibility = View.VISIBLE
+                // Need to do this async
+                submissionUiModel.content?.let {
+                    Markwon.setMarkdown(submission_content, it)
+                }
+                submission_title.text = submissionUiModel.title
 
             }
 

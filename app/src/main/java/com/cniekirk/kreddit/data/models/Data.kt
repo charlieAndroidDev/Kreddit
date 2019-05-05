@@ -25,7 +25,7 @@ data class Data(
     @Json(name = "views")
     val views: Int,
     @Json(name = "bandwidth")
-    val bandwidth: Int,
+    val bandwidth: Long,
     @Json(name = "vote")
     val vote: Any,
     @Json(name = "favorite")

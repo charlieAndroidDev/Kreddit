@@ -26,7 +26,8 @@ class ImgurServiceModule {
     fun provideOkHttp(): OkHttpClient {
 
         return when {
-            BuildConfig.DEBUG -> OkHttpClient.Builder().addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS)).build()
+            BuildConfig.DEBUG -> OkHttpClient.Builder()
+                .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS)).build()
             else -> OkHttpClient.Builder().build()
         }
 
@@ -35,7 +36,7 @@ class ImgurServiceModule {
     @Singleton
     @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
-        .baseUrl("https://imgur-apiv3.p.rapidapi.com/3/")
+        .baseUrl("https://imgur-apiv3.p.rapidapi.com/")
         .addConverterFactory(MoshiConverterFactory.create())
         .client(okHttpClient)
         .build()

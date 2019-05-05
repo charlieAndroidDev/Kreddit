@@ -1,5 +1,6 @@
 package com.cniekirk.kreddit.data.api.repo
 
+import android.util.Log
 import com.cniekirk.kreddit.core.platform.NetworkHandler
 import com.cniekirk.kreddit.data.api.ImgurApi
 import com.cniekirk.kreddit.data.models.ImageInformation
@@ -31,9 +32,12 @@ class ImgurRepositoryImpl @Inject constructor(private val imgurApi: ImgurApi,
                         Either.Right(transform(it))
                     } ?: Either.Left(Failure.ServerError())
                 }
-                false -> Either.Left(Failure.ServerError())
+                false -> {
+                    Either.Left(Failure.ServerError())
+                }
             }
         } catch (exception: Throwable) {
+            Log.e("IMGUR", "Error: $exception")
             Either.Left(Failure.ServerError())
         }
     }

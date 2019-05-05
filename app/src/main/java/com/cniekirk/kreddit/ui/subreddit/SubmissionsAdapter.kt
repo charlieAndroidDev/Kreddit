@@ -77,6 +77,7 @@ class SubmissionsAdapter(private val clickListener: SubmissionItemClickListener,
             gestureLayout.setOnLongClickListener {
                 isLongPressed = true
                 gestureLayout.displayActions()
+
                 true
             }
             gestureLayout.setOnTouchListener { view, motionEvent ->
