@@ -32,12 +32,8 @@ class SubmissionsAdapter(private val clickListener: SubmissionItemClickListener,
     override fun onBindViewHolder(holder: SubmissionViewHolder, position: Int) {
         holder.submissionIndex = position
         holder.submissionTitle.text = submissionUiModels[position].title
-
-        val difference = System.currentTimeMillis() - submissionUiModels[position].date.time
-        val days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS)
-
-        holder.submissionVoteCount.text = submissionUiModels[position].votes.toString()
-        holder.submissionDate.text = "${days}d"
+        holder.submissionDate.text = submissionUiModels[position].date
+        holder.submissionVoteCount.text = submissionUiModels[position].voteString
         holder.submissionSubreddit.text = submissionUiModels[position].subReddit
         holder.submissionTitle.requestLayout()
     }
