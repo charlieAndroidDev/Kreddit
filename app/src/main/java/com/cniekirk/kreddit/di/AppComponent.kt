@@ -8,6 +8,9 @@ import dagger.android.AndroidInjectionModule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Singleton
 
+/**
+ * Dagger Component class
+ */
 @ExperimentalCoroutinesApi
 @Singleton
 @Component(modules = [

@@ -2,11 +2,10 @@ package com.cniekirk.kreddit.data.reddit.jraw
 
 import com.cniekirk.kreddit.core.platform.NetworkHandler
 import com.cniekirk.kreddit.data.SubmissionRequestOptions
-import com.cniekirk.kreddit.ui.subreddit.uimodel.SubmissionUiModel
 import com.cniekirk.kreddit.data.reddit.Reddit
+import com.cniekirk.kreddit.ui.subreddit.uimodel.SubmissionUiModel
 import com.cniekirk.kreddit.utils.Either
 import com.cniekirk.kreddit.utils.Failure
-import com.cniekirk.kreddit.core.extensions.format
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
@@ -63,7 +62,7 @@ class JrawSubreddit constructor(
 
                 Either.Right(uiSubmissions)
             }
-            false, null -> Either.Left(Failure.NetworkConnection())
+            false, null -> Either.Left(Failure.NetworkConnectionError())
         }
 
     }

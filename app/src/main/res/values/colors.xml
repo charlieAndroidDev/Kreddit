@@ -10,4 +10,6 @@
     <color name="colorRed">#d32f2f</color>
     <color name="colorGold">#FFB300</color>
     <color name="colorBlue">#1E88E5</color>
+    <color name="colorToolbar">#212121</color>
+    <color name="transparent">#00FFFFFF</color>
 </resources>

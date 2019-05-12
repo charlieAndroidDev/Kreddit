@@ -4,7 +4,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import android.util.Log
+import com.cniekirk.kreddit.core.platform.NetworkHandler
 import com.cniekirk.kreddit.data.reddit.JrawTokenRefresher
+import com.cniekirk.kreddit.data.reddit.Reddit
+import com.cniekirk.kreddit.data.reddit.jraw.JrawReddit
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,6 +25,9 @@ import java.util.*
 import javax.inject.Named
 import javax.inject.Singleton
 
+/**
+ * Provides all the components the [Reddit] instance needs
+ */
 @ExperimentalCoroutinesApi
 @Module(includes = [ViewModelModule::class])
 class RedditServiceModule {
@@ -101,6 +107,12 @@ class RedditServiceModule {
             }.build()
 
         return AndroidHelper.accountHelper(appInfoProvider, deviceUUID, tokenStore, httpClient)
+    }
+
+    @Provides
+    @Singleton
+    fun provideReddit(jrawReddit: JrawReddit): Reddit {
+        return jrawReddit
     }
 
 }

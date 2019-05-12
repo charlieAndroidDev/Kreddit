@@ -3,4 +3,7 @@
     <declare-styleable name="GestureActionLayout">
         <attr name="item_expand_ratio" format="float"/>
     </declare-styleable>
+    <declare-styleable name="AnimatedToolbarBackground">
+        <attr name="clickableWhenFilled" format="boolean" />
+    </declare-styleable>
 </resources>

@@ -6,6 +6,9 @@ import androidx.core.animation.doOnEnd
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.cniekirk.kreddit.widgets.gesture.draw.data.GestureActionData
 
+/**
+ * Custom GestureActionLayout animation class
+ */
 class AnimationManager(private val gestureActionData: GestureActionData,
                        private val animationListener: AnimationListener) {
 
@@ -17,6 +20,9 @@ class AnimationManager(private val gestureActionData: GestureActionData,
 
     }
 
+    /**
+     * Animate showing the control
+     */
     fun animateShow() {
 
         val textRevealAlpha = PropertyValuesHolder.ofInt("TEXT_REVEAL_ALPHA",
@@ -41,6 +47,9 @@ class AnimationManager(private val gestureActionData: GestureActionData,
 
     }
 
+    /**
+     * Animate hiding the control
+     */
     fun animateHide() {
 
         val textHideAlpha = PropertyValuesHolder.ofInt("TEXT_REVEAL_ALPHA",

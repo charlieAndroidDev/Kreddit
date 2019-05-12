@@ -7,6 +7,9 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import javax.inject.Inject
 
+/**
+ * Application class to initialise Dagger
+ */
 class FlexApp: Application(), HasActivityInjector {
 
     @Inject

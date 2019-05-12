@@ -10,6 +10,11 @@ import net.dean.jraw.android.SharedPreferencesTokenStore
 import net.dean.jraw.oauth.AccountHelper
 import javax.inject.Inject
 
+/**
+ * Extensible Reddit operations handling class.
+ *
+ * Initialises a new Reddit Client and offers it the the [ConflatedBroadcastChannel]
+ */
 @ExperimentalCoroutinesApi
 class JrawReddit @Inject constructor(
     private val accountHelper: AccountHelper,
@@ -32,6 +37,9 @@ class JrawReddit @Inject constructor(
 
     }
 
+    /**
+     * @return A [JrawSubreddit] instance
+     */
     override fun subreddit(): Reddit.Subreddit {
         return JrawSubreddit(clientBroadcastChannel, networkHandler)
     }

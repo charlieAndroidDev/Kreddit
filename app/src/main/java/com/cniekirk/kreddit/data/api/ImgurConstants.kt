@@ -1,5 +1,8 @@
 package com.cniekirk.kreddit.data.api
 
+/**
+ * Object containing constants for API requests
+ */
 object ImgurConstants {
 
     const val HEADER_AUTH_IMGUR = "Authorization: Client-ID e0546432c5dcc85"

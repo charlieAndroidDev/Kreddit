@@ -11,6 +11,9 @@ import dagger.android.AndroidInjection
 import dagger.android.support.AndroidSupportInjection
 import dagger.android.support.HasSupportFragmentInjector
 
+/**
+ * Injector to automatically inject lifecycle aware components like Fragments and Activities
+ */
 object AppInjector {
 
     fun init(app : FlexApp) {

@@ -1,5 +1,10 @@
 package com.cniekirk.kreddit.utils
 
+/**
+ * An Either monad implemented in kotlin
+ * NOT MY WORK
+ * @link https://github.com/android10/Android-CleanArchitecture-Kotlin/blob/master/app/src/main/kotlin/com/fernandocejas/sample/core/functional/Either.kt
+ */
 sealed class Either<out Failure, out Success> {
 
     /** * Represents the left side of [Either] class which by convention is a "Failure". */

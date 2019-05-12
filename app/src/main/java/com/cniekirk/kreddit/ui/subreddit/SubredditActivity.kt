@@ -13,7 +13,7 @@ import com.cniekirk.kreddit.core.extensions.inTransaction
 import com.cniekirk.kreddit.ui.submission.FragmentSubmission
 import com.cniekirk.kreddit.ui.subreddit.uimodel.SubmissionUiModel
 import com.cniekirk.kreddit.ui.subreddit.uimodel.SubredditRequests
-import com.cniekirk.kreddit.utils.AppViewModelFactory
+import com.cniekirk.kreddit.viewmodel.AppViewModelFactory
 import com.cniekirk.kreddit.utils.animation.SubmissionListItemAnimtor
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
@@ -21,6 +21,11 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
+/**
+ * The main Activity of the application
+ *
+ * A list of Subreddit submissions are displayed in a list and expanded into the [submissionFragment] on click
+ */
 @ExperimentalCoroutinesApi
 class SubredditActivity : AppCompatActivity(), HasSupportFragmentInjector, SubmissionItemClickListener {
 
@@ -55,6 +60,9 @@ class SubredditActivity : AppCompatActivity(), HasSupportFragmentInjector, Submi
 
     }
 
+    /**
+     * Setup the page required to display a submission
+     */
     private fun setupSubmissionPage() {
 
         submission_page.parentToolbar = flex_toolbar
@@ -65,6 +73,9 @@ class SubredditActivity : AppCompatActivity(), HasSupportFragmentInjector, Submi
 
     }
 
+    /**
+     * Setup the list of submissions in the Subreddit
+     */
     private fun setupSubmissionList() {
 
         submissions_list.itemAnimator = SubmissionListItemAnimtor(0)
@@ -78,6 +89,9 @@ class SubredditActivity : AppCompatActivity(), HasSupportFragmentInjector, Submi
 
     }
 
+    /**
+     * Update the list of submissions list when we actually have data to display
+     */
     private fun updateSubmissionsList(submissionUiModels: List<SubmissionUiModel>) {
 
         submissionsAdapter = SubmissionsAdapter(this, submissionUiModels)
@@ -85,6 +99,9 @@ class SubredditActivity : AppCompatActivity(), HasSupportFragmentInjector, Submi
 
     }
 
+    /**
+     * Capture back presses and collapse the [submissionFragment] is it is visible
+     */
     override fun onBackPressed() {
 
         if(submission_page.isExpandedOrExpanding) {
@@ -95,6 +112,9 @@ class SubredditActivity : AppCompatActivity(), HasSupportFragmentInjector, Submi
 
     }
 
+    /**
+     * Handle Submission item clicks
+     */
     override fun onItemClick(submission: Int) {
         subredditViewModel.clickSubmission(submission)
         submissions_list.expandItem(submissionsAdapter.getItemId(submission))

@@ -1,8 +1,11 @@
 package com.cniekirk.kreddit.utils
 
+/**
+ * Class representing a Failure
+ */
 sealed class Failure {
 
-    class NetworkConnection: Failure()
+    class NetworkConnectionError: Failure()
     class ServerError(): Failure()
 
     abstract class FeatureFailure: Failure()

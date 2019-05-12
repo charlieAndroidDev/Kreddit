@@ -4,12 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cniekirk.kreddit.ui.submission.SubmissionViewModel
 import com.cniekirk.kreddit.ui.subreddit.SubredditViewModel
-import com.cniekirk.kreddit.utils.AppViewModelFactory
+import com.cniekirk.kreddit.viewmodel.AppViewModelFactory
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+/**
+ * Builds a map to provide to AppViewModelFactory
+ */
 @ExperimentalCoroutinesApi
 @Module
 abstract class ViewModelModule {

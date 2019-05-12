@@ -18,6 +18,12 @@ import com.cniekirk.kreddit.R
 import com.cniekirk.kreddit.ui.subreddit.uimodel.GestureSubmissionData
 import com.cniekirk.kreddit.widgets.gesture.draw.data.GestureActionData
 
+/**
+ * Custom view to provide ability to upvote/downvote and perform other actions on a Reddit submission
+ *
+ * As a side-note it was very well received amongst other developers in the Android developer community:
+ * https://www.reddit.com/r/androiddev/comments/atvvc7/messing_about_my_first_custom_view_thoughts/
+ */
 class GestureActionLayout(context: Context, attributeSet: AttributeSet):
     ConstraintLayout(context, attributeSet) {
 

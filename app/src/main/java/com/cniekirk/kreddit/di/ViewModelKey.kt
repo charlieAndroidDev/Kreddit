@@ -4,6 +4,9 @@ import androidx.lifecycle.ViewModel
 import dagger.MapKey
 import kotlin.reflect.KClass
 
+/**
+ * Annotation class to tell Dagger which keytype to use in its map
+ */
 @MustBeDocumented
 @Target(
     AnnotationTarget.FUNCTION,

@@ -20,6 +20,7 @@ import javax.inject.Inject
 
 /**
  * Taken from https://github.com/saket/dank
+ * NOT MY OWN WORK.
  *
  * JRAW is capable of refreshing tokens automatically, but it doesn't seem to work.
  * This class does that + also refreshes tokens ahead of time (asynchronously) to

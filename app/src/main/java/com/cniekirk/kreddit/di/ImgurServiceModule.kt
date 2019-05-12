@@ -13,6 +13,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
+/**
+ * Module to provide various components the [ImgurRepository] needs
+ */
 @ExperimentalCoroutinesApi
 @Module(includes = [ViewModelModule::class])
 class ImgurServiceModule {

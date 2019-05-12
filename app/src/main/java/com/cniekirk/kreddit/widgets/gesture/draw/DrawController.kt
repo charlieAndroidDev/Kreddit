@@ -10,6 +10,9 @@ import com.cniekirk.kreddit.widgets.gesture.GestureAction
 import com.cniekirk.kreddit.widgets.gesture.GestureActionLayout
 import com.cniekirk.kreddit.widgets.gesture.draw.data.GestureActionData
 
+/**
+ * Class to manage drawing the control
+ */
 class DrawController(private val gestureActionData: GestureActionData,
                      private val foregroundDrawable: GestureActionLayout.ForegroundDrawable,
                      private val gestureActionIcons: List<GestureAction>) {

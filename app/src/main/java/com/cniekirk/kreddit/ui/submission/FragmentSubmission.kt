@@ -2,17 +2,21 @@ package com.cniekirk.kreddit.ui.submission
 
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.transition.AutoTransition
+import android.transition.Transition
+import android.transition.TransitionManager
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.palette.graphics.Palette
@@ -29,7 +33,7 @@ import com.cniekirk.kreddit.core.extensions.*
 import com.cniekirk.kreddit.data.models.ImageInformation
 import com.cniekirk.kreddit.di.Injectable
 import com.cniekirk.kreddit.ui.subreddit.uimodel.SubmissionUiModel
-import com.cniekirk.kreddit.utils.AppViewModelFactory
+import com.cniekirk.kreddit.viewmodel.AppViewModelFactory
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
@@ -42,6 +46,9 @@ import me.saket.inboxrecyclerview.page.InterceptResult
 import ru.noties.markwon.Markwon
 import javax.inject.Inject
 
+/**
+ * Fragment to display a Reddit Submission
+ */
 @ExperimentalCoroutinesApi
 class FragmentSubmission: Fragment(), Injectable {
 
@@ -51,10 +58,16 @@ class FragmentSubmission: Fragment(), Injectable {
 
     private val submissionPage by lazy { view!!.parent as ExpandablePageLayout }
 
+    /**
+     * Inflate our layout to display our UI
+     */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_submission, container, false)
     }
 
+    /**
+     * Called when the Fragment has been instantiated
+     */
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -63,6 +76,9 @@ class FragmentSubmission: Fragment(), Injectable {
         submissionViewModel.imageInformation.observe(this, Observer { renderImgurImage(it) })
     }
 
+    /**
+     * Called once the view has been created/rendered
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -85,7 +101,15 @@ class FragmentSubmission: Fragment(), Injectable {
 
     }
 
+    /**
+     * Special function the render Imgur images specifically
+     * @param imageInformation: The [ImageInformation] returned by the [SubmissionViewModel]
+     */
     private fun renderImgurImage(imageInformation: ImageInformation) {
+
+        val animation = AutoTransition()
+        animation.interpolator = FastOutSlowInInterpolator()
+        animation.duration = 150
 
         val constraintSet = ConstraintSet()
 
@@ -109,7 +133,8 @@ class FragmentSubmission: Fragment(), Injectable {
             player.prepare(mediaSource)
 
             constraintSet.clone(submission_layout)
-            constraintSet.connect(R.id.submission_title, ConstraintSet.TOP, R.id.player_view, ConstraintSet.BOTTOM, marginPx.toInt())
+            constraintSet.connect(R.id.submission_header, ConstraintSet.TOP, R.id.player_view, ConstraintSet.BOTTOM, marginPx.toInt())
+            TransitionManager.beginDelayedTransition(submission_layout, animation)
             constraintSet.applyTo(submission_layout)
 
 
@@ -120,7 +145,8 @@ class FragmentSubmission: Fragment(), Injectable {
                 .transition(DrawableTransitionOptions.withCrossFade()).into(submission_image)
 
             constraintSet.clone(submission_layout)
-            constraintSet.connect(R.id.submission_title, ConstraintSet.TOP, R.id.submission_image, ConstraintSet.BOTTOM, marginPx.toInt())
+            constraintSet.connect(R.id.submission_header, ConstraintSet.TOP, R.id.submission_image, ConstraintSet.BOTTOM, marginPx.toInt())
+            TransitionManager.beginDelayedTransition(submission_layout, animation)
             constraintSet.applyTo(submission_layout)
 
         }
@@ -130,7 +156,15 @@ class FragmentSubmission: Fragment(), Injectable {
 
     }
 
+    /**
+     * Complex function to render the Submission UI
+     * @param submissionUiModel: The model class representing what to display in the UI
+     */
     fun populateUi(submissionUiModel: SubmissionUiModel) {
+
+        val animation = AutoTransition()
+        animation.interpolator = FastOutSlowInInterpolator()
+        animation.duration = 150
 
         val constraintSet = ConstraintSet()
         constraintSet.clone(submission_layout)
@@ -141,7 +175,8 @@ class FragmentSubmission: Fragment(), Injectable {
             resources.displayMetrics
         )
 
-        constraintSet.connect(R.id.submission_title, ConstraintSet.TOP, R.id.close_btn, ConstraintSet.BOTTOM, marginPx.toInt())
+        constraintSet.connect(R.id.submission_header, ConstraintSet.TOP, R.id.close_btn, ConstraintSet.BOTTOM, marginPx.toInt())
+        //TransitionManager.beginDelayedTransition(submission_layout, animation)
         constraintSet.applyTo(submission_layout)
 
         // Reset so no previous image is displayed
@@ -158,6 +193,7 @@ class FragmentSubmission: Fragment(), Injectable {
                     val imageHash = it.substring(it.lastIndexOf("/"), it.lastIndexOf("."))
                     submissionViewModel.getImageInformation(imageHash)
                     submission_title.text = submissionUiModel.title
+                    submission_score.text = submissionUiModel.voteString
                     return@let
                 }
 
@@ -185,13 +221,14 @@ class FragmentSubmission: Fragment(), Injectable {
                                     dataSource: DataSource?,
                                     isFirstResource: Boolean
                                 ): Boolean {
-
                                     submission_title.text = submissionUiModel.title
+                                    submission_score.text = submissionUiModel.voteString
 
                                     submission_content_container.visibility = View.GONE
 
                                     constraintSet.clone(submission_layout)
-                                    constraintSet.connect(R.id.submission_title, ConstraintSet.TOP, R.id.submission_image, ConstraintSet.BOTTOM, marginPx.toInt())
+                                    constraintSet.connect(R.id.submission_header, ConstraintSet.TOP, R.id.submission_image, ConstraintSet.BOTTOM, marginPx.toInt())
+                                    TransitionManager.beginDelayedTransition(submission_layout, animation)
                                     constraintSet.applyTo(submission_layout)
 
                                     val bmp = resource?.toBitmap()
@@ -238,10 +275,12 @@ class FragmentSubmission: Fragment(), Injectable {
                                     isFirstResource: Boolean
                                 ): Boolean {
                                     submission_title.text = submissionUiModel.title
+                                    submission_score.text = submissionUiModel.voteString
                                     submission_content_container.visibility = View.GONE
 
                                     constraintSet.clone(submission_layout)
-                                    constraintSet.connect(R.id.submission_title, ConstraintSet.TOP, R.id.submission_image, ConstraintSet.BOTTOM, marginPx.toInt())
+                                    constraintSet.connect(R.id.submission_header, ConstraintSet.TOP, R.id.submission_image, ConstraintSet.BOTTOM, marginPx.toInt())
+                                    TransitionManager.beginDelayedTransition(submission_layout, animation)
                                     constraintSet.applyTo(submission_layout)
 
                                     resource?.let {
@@ -314,12 +353,14 @@ class FragmentSubmission: Fragment(), Injectable {
 
                 submission_content_container.visibility = View.GONE
                 submission_title.text = submissionUiModel.title
+                submission_score.text = submissionUiModel.voteString
 
                 web_link_title.text = submissionUiModel.url
 
                 constraintSet.clone(submission_layout)
                 constraintSet.connect(R.id.web_link_container, ConstraintSet.TOP, R.id.close_btn, ConstraintSet.BOTTOM, marginPx.toInt())
-                constraintSet.connect(R.id.submission_title, ConstraintSet.TOP, R.id.web_link_container, ConstraintSet.BOTTOM, marginPx.toInt())
+                constraintSet.connect(R.id.submission_header, ConstraintSet.TOP, R.id.web_link_container, ConstraintSet.BOTTOM, marginPx.toInt())
+                TransitionManager.beginDelayedTransition(submission_layout, animation)
                 constraintSet.applyTo(submission_layout)
 
             } else {
@@ -330,6 +371,7 @@ class FragmentSubmission: Fragment(), Injectable {
                     Markwon.setMarkdown(submission_content, it)
                 }
                 submission_title.text = submissionUiModel.title
+                submission_score.text = submissionUiModel.voteString
 
             }
 

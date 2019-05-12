@@ -5,7 +5,7 @@ buildscript {
     ext.dagger_version = '2.21'
     ext.jraw_version = '1.1.0'
     ext.lifecycle_version = '2.0.0'
-    ext.room_version = '2.1.0-alpha04'
+    ext.room_version = '2.1.0-beta01'
     repositories {
         google()
         jcenter()

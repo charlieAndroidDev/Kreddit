@@ -14,6 +14,9 @@ import com.cniekirk.kreddit.widgets.gesture.GestureActionLayout
 import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
 
+/**
+ * Adapter to render each Subreddit [SubmissionUiModel]
+ */
 class SubmissionsAdapter(private val clickListener: SubmissionItemClickListener,
                          private val submissionUiModels: List<SubmissionUiModel>):
     RecyclerView.Adapter<SubmissionsAdapter.SubmissionViewHolder>() {
@@ -22,13 +25,19 @@ class SubmissionsAdapter(private val clickListener: SubmissionItemClickListener,
         setHasStableIds(true)
     }
 
+    /**
+     * Inflate layout and create the ViewHolder
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubmissionViewHolder {
 
         val submissionLayout = LayoutInflater.from(parent.context).inflate(R.layout.list_submission_item, parent, false)
         return SubmissionViewHolder(submissionLayout, clickListener)
 
     }
-    
+
+    /**
+     * Set all attributes for the [SubmissionUiModel] item in the list
+     */
     override fun onBindViewHolder(holder: SubmissionViewHolder, position: Int) {
         holder.submissionIndex = position
         holder.submissionTitle.text = submissionUiModels[position].title
@@ -38,10 +47,17 @@ class SubmissionsAdapter(private val clickListener: SubmissionItemClickListener,
         holder.submissionTitle.requestLayout()
     }
 
+    /**
+     * Gets the item count in the list
+     * @return The list item count
+     */
     override fun getItemCount(): Int {
         return submissionUiModels.size
     }
 
+    /**
+     * @return The Unique ID associated with each item
+     */
     override fun getItemId(position: Int): Long {
 
         val item = submissionUiModels[position]
@@ -49,6 +65,9 @@ class SubmissionsAdapter(private val clickListener: SubmissionItemClickListener,
 
     }
 
+    /**
+     * The ViewHolder class for each item in the list
+     */
     open class SubmissionViewHolder(
         itemView: View,
         listener: SubmissionItemClickListener

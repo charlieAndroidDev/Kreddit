@@ -9,6 +9,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * ViewModel to provide access to Reddit Submission data
+ */
 @ExperimentalCoroutinesApi
 @Singleton
 class SubredditViewModel @Inject constructor(
@@ -19,6 +22,10 @@ class SubredditViewModel @Inject constructor(
     val clickedSubmission: MutableLiveData<SubmissionUiModel> = MutableLiveData()
     val isLoadingSubmissions: MutableLiveData<Boolean> = MutableLiveData()
 
+    /**
+     * Load submissions from the network and execute [handleSubmissions] is successful
+     * @param params: The [SubmissionRequestOptions] associated with this request for data
+     */
     fun loadSubredditSubmissions(params: SubmissionRequestOptions) {
 
         isLoadingSubmissions.value = true
@@ -26,12 +33,18 @@ class SubredditViewModel @Inject constructor(
 
     }
 
+    /**
+     * Handle a click on a submission
+     */
     fun clickSubmission(submissionIndex: Int) {
 
         clickedSubmission.value = submissions.value?.get(submissionIndex)
 
     }
 
+    /**
+     * Changes the loading state for the UI updates the [submissions] LiveData with data
+     */
     private fun handleSubmissions(submissionUiModels: List<SubmissionUiModel>) {
 
         isLoadingSubmissions.value = false

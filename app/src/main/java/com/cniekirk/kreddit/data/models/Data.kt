@@ -2,7 +2,9 @@ package com.cniekirk.kreddit.data.models
 
 import com.squareup.moshi.Json
 
-
+/**
+ * JSON model class to be parsed from an Imgur API response
+ */
 data class Data(
     @Json(name = "id")
     val id: String,
@@ -67,4 +69,45 @@ data class Data(
     @Json(name = "processing")
     val processing: Processing,
     @Json(name = "ad_config")
-    val adConfig: AdConfig)
+    val adConfig: AdConfig) {
+
+    companion object {
+
+        fun empty() = Data(
+            "",
+            "",
+            "",
+            0,
+            "",
+            false,
+            0,
+            0,
+            0,
+            0,
+            0L,
+            "",
+            false,
+            false,
+            "",
+            "",
+            "",
+            false,
+            false,
+            false,
+            emptyList(),
+            0,
+            "",
+            "",
+             false,
+            "",
+            0,
+            "",
+            "",
+            "",
+            Processing.empty(),
+            AdConfig.empty()
+        )
+
+    }
+
+}
