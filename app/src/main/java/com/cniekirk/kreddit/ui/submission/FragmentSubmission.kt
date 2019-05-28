@@ -157,6 +157,8 @@ class FragmentSubmission: Fragment(), Injectable {
     }
 
     /**
+     * TODO: Make use of the scrollable RecyclerView sheet
+     *
      * Complex function to render the Submission UI
      * @param submissionUiModel: The model class representing what to display in the UI
      */

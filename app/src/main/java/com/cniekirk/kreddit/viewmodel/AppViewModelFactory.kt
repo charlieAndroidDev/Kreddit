@@ -16,7 +16,7 @@ class AppViewModelFactory @Inject constructor(
 ): ViewModelProvider.Factory {
 
     /**
-     * Create the ViewModel instance is possible
+     * Create the ViewModel instance if possible
      *
      * @param modelClass: The ViewModel class
      * @return The ViewModel instance of type [T]

@@ -11,6 +11,7 @@ import com.cniekirk.kreddit.R
 import com.cniekirk.kreddit.ui.subreddit.uimodel.SubmissionUiModel
 import com.cniekirk.kreddit.widgets.gesture.GestureAction
 import com.cniekirk.kreddit.widgets.gesture.GestureActionLayout
+import kotlinx.android.extensions.LayoutContainer
 import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
 
@@ -18,6 +19,7 @@ import kotlin.properties.Delegates
  * Adapter to render each Subreddit [SubmissionUiModel]
  */
 class SubmissionsAdapter(private val clickListener: SubmissionItemClickListener,
+                         private val longPressListener: SubmissionItemLongPressListener,
                          private val submissionUiModels: List<SubmissionUiModel>):
     RecyclerView.Adapter<SubmissionsAdapter.SubmissionViewHolder>() {
 
@@ -31,7 +33,7 @@ class SubmissionsAdapter(private val clickListener: SubmissionItemClickListener,
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubmissionViewHolder {
 
         val submissionLayout = LayoutInflater.from(parent.context).inflate(R.layout.list_submission_item, parent, false)
-        return SubmissionViewHolder(submissionLayout, clickListener)
+        return SubmissionViewHolder(submissionLayout, clickListener, longPressListener)
 
     }
 
@@ -70,8 +72,12 @@ class SubmissionsAdapter(private val clickListener: SubmissionItemClickListener,
      */
     open class SubmissionViewHolder(
         itemView: View,
-        listener: SubmissionItemClickListener
-    ): RecyclerView.ViewHolder(itemView) {
+        listener: SubmissionItemClickListener,
+        longPressListener: SubmissionItemLongPressListener
+    ): RecyclerView.ViewHolder(itemView), LayoutContainer {
+
+        override val containerView: View?
+            get() = itemView
 
         /*
             Lazy evaluated views to avoid null reference exceptions
@@ -80,7 +86,7 @@ class SubmissionsAdapter(private val clickListener: SubmissionItemClickListener,
         val submissionVoteCount: TextView by lazy { itemView.findViewById<TextView>(R.id.submission_vote_count) }
         val submissionDate: TextView by lazy { itemView.findViewById<TextView>(R.id.submission_date) }
         val submissionSubreddit: TextView by lazy { itemView.findViewById<TextView>(R.id.submission_subreddit) }
-        private val gestureLayout: GestureActionLayout = itemView.findViewById(R.id.submission_container)
+        val gestureLayout: GestureActionLayout = itemView.findViewById(R.id.submission_container)
 
         var submissionIndex: Int by Delegates.notNull()
         var isLongPressed = false
@@ -91,7 +97,8 @@ class SubmissionsAdapter(private val clickListener: SubmissionItemClickListener,
             }
             gestureLayout.setOnLongClickListener {
                 isLongPressed = true
-                gestureLayout.displayActions()
+                //gestureLayout.displayActions()
+                longPressListener.onLongPress(submissionIndex)
 
                 true
             }
@@ -104,14 +111,15 @@ class SubmissionsAdapter(private val clickListener: SubmissionItemClickListener,
 
                     if (motionEvent.action == MotionEvent.ACTION_UP) {
 
-                        gestureLayout.hideActions()
+                        //gestureLayout.hideActions()
+                        longPressListener.onLongPressRelease(submissionIndex)
                         isLongPressed = false
                         // Make sure we pass back control while not long pressing
                         gestureLayout.parent.requestDisallowInterceptTouchEvent(false)
 
                     } else if (motionEvent.action == MotionEvent.ACTION_MOVE) {
 
-                        gestureLayout.setAction(motionEvent.x)
+                        //gestureLayout.setAction(motionEvent.x)
                         view.onTouchEvent(motionEvent)
 
                     } else {

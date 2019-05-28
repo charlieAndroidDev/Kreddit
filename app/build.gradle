@@ -37,10 +37,11 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha05'
-    implementation 'androidx.core:core-ktx:1.1.0-beta01'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.core:core-ktx:1.2.0-alpha01'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta1'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.palette:palette:1.0.0'
+    implementation 'com.google.android.material:material:1.1.0-alpha06'
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.0'
@@ -61,6 +62,7 @@ dependencies {
     implementation 'me.saket:inboxrecyclerview:1.0.0-rc1'
     implementation 'ru.noties:markwon:2.0.1'
     implementation 'com.google.android.exoplayer:exoplayer:2.9.6'
+    implementation 'com.afollestad:aesthetic:1.0.0-beta05'
 
     kapt "androidx.room:room-compiler:$room_version"
     kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
@@ -73,6 +75,6 @@ dependencies {
     testImplementation 'org.robolectric:robolectric:4.2.1'
     testImplementation 'org.amshove.kluent:kluent:1.49'
     androidTestImplementation "io.mockk:mockk-android:1.9.3"
-    androidTestImplementation 'androidx.test:runner:1.1.2-alpha01'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.2-alpha01'
+    androidTestImplementation 'androidx.test:runner:1.2.0-beta01'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-beta01'
 }

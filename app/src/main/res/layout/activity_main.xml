@@ -49,4 +49,92 @@
         android:layout_height="match_parent"
         android:elevation="4dp"/>
 
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/submission_actions_scene_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layoutDescription="@xml/submission_actions_scene"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/actions_blur"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            android:scaleType="matrix"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/motion_submission_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/submission_action_content"
+            android:importantForAccessibility="no"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/btn_upvote"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="34dp"
+            android:layout_marginTop="16dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_up_arrow"
+            android:tint="@android:color/white"
+            app:layout_constraintEnd_toStartOf="@id/btn_downvote"
+            app:layout_constraintHorizontal_weight="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/motion_submission_content" />
+
+        <ImageView
+            android:id="@+id/btn_downvote"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginTop="16dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_down_arrow"
+            android:tint="@android:color/white"
+            app:layout_constraintEnd_toStartOf="@id/btn_favorite"
+            app:layout_constraintHorizontal_weight="0.5"
+            app:layout_constraintStart_toEndOf="@id/btn_upvote"
+            app:layout_constraintTop_toBottomOf="@id/motion_submission_content" />
+
+        <ImageView
+            android:id="@+id/btn_favorite"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginTop="16dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_favorite"
+            android:tint="@android:color/white"
+            app:layout_constraintEnd_toStartOf="@id/btn_options"
+            app:layout_constraintHorizontal_weight="0.5"
+            app:layout_constraintStart_toEndOf="@id/btn_downvote"
+            app:layout_constraintTop_toBottomOf="@id/motion_submission_content" />
+
+        <ImageView
+            android:id="@+id/btn_options"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="34dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_info"
+            android:tint="@android:color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="0.5"
+            app:layout_constraintStart_toEndOf="@id/btn_favorite"
+            app:layout_constraintTop_toBottomOf="@id/motion_submission_content" />
+
+    </androidx.constraintlayout.motion.widget.MotionLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
